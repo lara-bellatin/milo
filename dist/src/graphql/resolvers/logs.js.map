@@ -1,0 +1,1 @@
+{"version":3,"file":"logs.js","sourceRoot":"","sources":["../../../../src/graphql/resolvers/logs.ts"],"names":[],"mappings":";;AAEA,kBAAe;IACX,KAAK,EAAE;QACH,GAAG,EAAE,GAAG,EAAE;YACN,OAAO,CAAC,GAAG,CAAC,iBAAiB,CAAC,CAAC;QACnC,CAAC;KACJ;CACJ,CAAA"}

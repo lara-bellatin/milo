@@ -10,9 +10,14 @@ export interface APIs {
   logsAPI: any;
   sequencesAPI: any;
   bucketsAPI: any;
+  usersAPI: any;
 }
 
 export interface Context {
-  loginPassword?: string;
+  unauthenticatedAPIs: {
+    passport: any;
+  }
+  loginUser?: any;
+  user?: any;
   apis?: APIs;
 }

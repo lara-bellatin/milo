@@ -1,2 +1,2 @@
-
-export const PASSWORD = 'ES PACIO';
+export const PRODUCTION = "production";
+export const DEVELOPMENT = "development";

@@ -2,11 +2,8 @@
     "compilerOptions": {
         "target": "es6",
         "module": "commonjs",
-         "lib": [
-            "ES2020"
-         ],
-        "strict": true,
-        "rootDir": ".",
+        "lib": ["ES2020", "dom"],
+        "sourceMap": true,
         "outDir": "./dist",
         "moduleResolution": "node",
         "removeComments": true,
@@ -32,4 +29,4 @@
         "app.ts",
         "main.ts",
         ".src/**/*.ts"],
-  }
+    }

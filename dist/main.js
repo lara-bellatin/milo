@@ -24,3 +24,4 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
 main().catch((err) => {
     console.error(err);
 });
+//# sourceMappingURL=main.js.map

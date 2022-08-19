@@ -1,5 +1,7 @@
+import User from "../../users/models/User";
 
 export interface AuthContext {
-  loginPassword: string;
+  user: User;
+  loginUser: User;
   [key: string]: any;
 }

@@ -2,6 +2,7 @@ import { Model } from "objection";
 import BaseModel from "../../utils/BaseModel";
 import Sequence from "../../sequences/models/Sequence";
 import Bucket from "../../buckets/models/Bucket";
+import User from "../../users/models/User";
 
 
 class Log extends BaseModel {
@@ -18,10 +19,12 @@ class Log extends BaseModel {
     sequenceId: string;
     sequenceOrder: string;
     bucketId: string;
+    userId: string;
 
     // relations
     sequence: Sequence;
     bucket: Bucket;
+    owner: User;
 
     static get tableName() {
         return "logs";
@@ -29,7 +32,7 @@ class Log extends BaseModel {
     
     static get relationMappings() {
         return {
-            creator: {
+            sequence: {
                 relation: Model.HasOneRelation,
                 modelClass: Sequence,
                 join: {
@@ -37,7 +40,7 @@ class Log extends BaseModel {
                     to: "sequences.id",
                 },
                 },
-                owner: {
+                bucket: {
                 relation: Model.HasOneRelation,
                 modelClass: Bucket,
                 join: {
@@ -45,6 +48,14 @@ class Log extends BaseModel {
                     to: "buckets.id",
                 },
             },
+            creator: {
+                relation: Model.HasOneRelation,
+                modelClass: User,
+                join: {
+                    from: "logs.userId",
+                    to: "users.id",
+                },
+            }
         };
     }
 

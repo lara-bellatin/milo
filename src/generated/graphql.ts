@@ -13,6 +13,11 @@ export type Scalars = {
   JSON: any;
 };
 
+export type AuthPayload = {
+  __typename?: 'AuthPayload';
+  user?: Maybe<User>;
+};
+
 export type Bucket = {
   __typename?: 'Bucket';
   canceledAt?: Maybe<Scalars['String']>;
@@ -72,6 +77,12 @@ export type CreateSequenceInput = {
   title: Scalars['String'];
 };
 
+export type CreateUserInput = {
+  displayName: Scalars['String'];
+  email: Scalars['String'];
+  password: Scalars['String'];
+};
+
 export type Log = {
   __typename?: 'Log';
   bucket?: Maybe<Bucket>;
@@ -107,6 +118,11 @@ export enum LogType {
   Wait = 'WAIT'
 }
 
+export type LoginUserInput = {
+  email: Scalars['String'];
+  password: Scalars['String'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   cancelBucket?: Maybe<Bucket>;
@@ -116,12 +132,17 @@ export type Mutation = {
   createBucket: Bucket;
   createLog: Log;
   createSequence: Sequence;
+  createUser: User;
   deleteLog?: Maybe<Log>;
+  deleteUser: User;
+  login?: Maybe<AuthPayload>;
+  logout?: Maybe<Scalars['Boolean']>;
   resolveLog?: Maybe<Log>;
   unresolveLog?: Maybe<Log>;
   updateBucket: Bucket;
   updateLog: Log;
   updateSequence: Sequence;
+  updateUser: User;
 };
 
 
@@ -160,8 +181,24 @@ export type MutationCreateSequenceArgs = {
 };
 
 
+export type MutationCreateUserArgs = {
+  input: CreateUserInput;
+};
+
+
 export type MutationDeleteLogArgs = {
   id: Scalars['String'];
+};
+
+
+export type MutationDeleteUserArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationLoginArgs = {
+  email: Scalars['String'];
+  password: Scalars['String'];
 };
 
 
@@ -189,14 +226,19 @@ export type MutationUpdateSequenceArgs = {
   input: UpdateSequenceInput;
 };
 
+
+export type MutationUpdateUserArgs = {
+  input: UpdateUserInput;
+};
+
 export type Query = {
   __typename?: 'Query';
   bucket?: Maybe<Bucket>;
   buckets: Array<Bucket>;
   log?: Maybe<Log>;
-  login?: Maybe<Scalars['Boolean']>;
-  logout?: Maybe<Scalars['Boolean']>;
+  loginUser?: Maybe<User>;
   logs: Array<Log>;
+  me?: Maybe<User>;
   sequence?: Maybe<Sequence>;
   sequenceLogs: Array<Log>;
   sequences: Array<Sequence>;
@@ -213,8 +255,8 @@ export type QueryLogArgs = {
 };
 
 
-export type QueryLoginArgs = {
-  password: Scalars['String'];
+export type QueryMeArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -276,3 +318,31 @@ export type UpdateSequenceInput = {
   title?: InputMaybe<Scalars['String']>;
   type?: InputMaybe<BucketType>;
 };
+
+export type UpdateUserInput = {
+  birthday?: InputMaybe<Scalars['String']>;
+  displayName?: InputMaybe<Scalars['String']>;
+  email?: InputMaybe<Scalars['String']>;
+  username?: InputMaybe<Scalars['String']>;
+};
+
+export type User = {
+  __typename?: 'User';
+  birthday?: Maybe<Scalars['String']>;
+  buckets?: Maybe<Array<Maybe<Bucket>>>;
+  createdAt?: Maybe<Scalars['String']>;
+  displayName: Scalars['String'];
+  email: Scalars['String'];
+  id: Scalars['String'];
+  logs?: Maybe<Array<Maybe<Log>>>;
+  password: Scalars['String'];
+  sequences?: Maybe<Array<Maybe<Sequence>>>;
+  status: UserStatus;
+  updatedAt?: Maybe<Scalars['String']>;
+  username?: Maybe<Scalars['String']>;
+};
+
+export enum UserStatus {
+  Active = 'ACTIVE',
+  Deleted = 'DELETED'
+}

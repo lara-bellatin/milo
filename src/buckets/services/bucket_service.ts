@@ -1,45 +1,32 @@
-// import Bucket from "../models/Bucket";
+import Bucket from "../models/Bucket";
 
 
-// /*
-//  * * * * * *
-//  * Queries
-//  * * * * * *
-//  */
+/*
+ * * * * * *
+ * Queries
+ * * * * * *
+ */
 
-// async function getBucket({ id }: { id: string }) {
-//   return await Bucket.query().findById(id);
-// }
+async function getBucketById({ bucketId }: { bucketId: string }) {
+  return await Bucket.query().findById(bucketId);
+}
 
-// async function getAllBuckets() {
-//   return await Bucket.query();
-// }
+async function getAllForUser({ userId }: { userId: string }) {
+  return await Bucket.query().where("userId", userId);
+}
 
 
-// /*
-//  * * * * * * *
-//  * Mutations
-//  * * * * * * *
-//  */
-
-// async function createBucket({ input }: { input: CreateBucketInput })
-
-//   buckets: [Bucket!]!
-//   // Mutations
-//   createBucket(input: CreateBucketInput!): Bucket!
-//   updateBucket(input: UpdateBucketInput!): Bucket!
-//   cancelBucket(id: String!): Bucket
-//   completeBucket(id: String!): Bucket
+/*
+ * * * * * * *
+ * Mutations
+ * * * * * * *
+ */
 
 
 
-// export default {
-//   // Queries
-//   getBucket,
-//   getAllBuckets,
-//   // Mutation
-//   createBucket,
-//   updateBucket,
-//   cancelBucket,
-//   completeBucket,
-// }
+
+export default {
+  // Queries
+  getBucketById,
+  getAllForUser,
+}
