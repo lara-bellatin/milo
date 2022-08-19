@@ -2,7 +2,7 @@ import { apollo, setupExpressApp } from "./app";
 
 
 const main = async () => {
-    const app = setupExpressApp();
+  const { app } = setupExpressApp(process.env.NODE_ENV!);
 
     await apollo.start();
 

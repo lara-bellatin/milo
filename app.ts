@@ -76,7 +76,7 @@ export const apollo = new ApolloServer({
 // }
 
 
-export function setupExpressApp() {
+export function setupExpressApp(env: string) {
   const app = express();
 
   // Initialize DB conn
@@ -113,5 +113,5 @@ export function setupExpressApp() {
   app.use(passport.initialize());
   app.use(passport.session());
 
-  return app;
+  return { app, knex };
 }

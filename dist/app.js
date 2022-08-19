@@ -53,7 +53,7 @@ exports.apollo = new apollo_server_express_1.ApolloServer({
         return Object.assign(Object.assign({}, baseCtx), authenticatedCtx);
     }),
 });
-function setupExpressApp() {
+function setupExpressApp(env) {
     const app = (0, express_1.default)();
     const knex = (0, knex_1.default)(knexfile_1.default[env]);
     objection_1.Model.knex(knex);
@@ -81,7 +81,7 @@ function setupExpressApp() {
     app.use((0, express_session_1.default)(session));
     app.use(passport_1.default.initialize());
     app.use(passport_1.default.session());
-    return app;
+    return { app, knex };
 }
 exports.setupExpressApp = setupExpressApp;
 //# sourceMappingURL=app.js.map
