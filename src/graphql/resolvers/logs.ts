@@ -2,7 +2,7 @@
 
 export default {
     Query: {
-        newLog: () => {
+        log: () => {
             console.log("new log created");
         }
     }

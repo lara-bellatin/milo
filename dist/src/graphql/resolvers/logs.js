@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = {
     Query: {
-        newLog: () => {
+        log: () => {
             console.log("new log created");
         }
     }

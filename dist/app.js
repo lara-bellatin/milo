@@ -9,11 +9,6 @@ const schema_1 = require("@graphql-tools/schema");
 const express_1 = __importDefault(require("express"));
 const graphql_1 = __importDefault(require("./src/graphql"));
 const schema_2 = __importDefault(require("./src/graphql/schema"));
-const forceHTTPS = () => {
-    return (req, res, next) => {
-        next();
-    };
-};
 const schema = (0, schema_1.makeExecutableSchema)({
     typeDefs: schema_2.default,
     resolvers: graphql_1.default,
@@ -23,7 +18,6 @@ exports.apollo = new apollo_server_express_1.ApolloServer({
 });
 function setupExpressApp() {
     const app = (0, express_1.default)();
-    app.use(forceHTTPS());
     return app;
 }
 exports.setupExpressApp = setupExpressApp;

@@ -1,7 +1,20 @@
 import { mergeTypeDefs } from "@graphql-tools/merge";
+import { gql } from "apollo-server-express";
 
 import logs from "./schema/logs";
+import sequences from "./schema/sequences";
+import buckets from "./schema/buckets";
 
-// add more schemas and add them to mergeTypeDefs, if a general schema is necessary, add it here and merge with typeDefs
+const schema = gql`
+  ## SCALARS
+  scalar JSON
 
-export default mergeTypeDefs([logs])
+
+  type Query {
+    login(password: String!): Boolean
+    logout: Boolean
+  }
+`
+
+
+export default mergeTypeDefs([schema, logs, sequences, buckets])
