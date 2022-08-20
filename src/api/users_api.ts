@@ -1,20 +1,23 @@
 
 // import User from "../users/models/User";
-import { findUserByID } from "../users/services/user_service";
-// import {  UserUpdateInput } from "../generated/graphql";
+import UserService, { findUserByID } from "../users/services/user_service";
+import {  CreateUserInput } from "../generated/graphql";
 import { AuthContext } from "./interfaces";
 
-const usersAPI = ({ user }: AuthContext) => ({
+const unauthenticatedUserAPI = {
+  createUser: async ({ input }: { input: CreateUserInput }) => {
+    return await UserService.createUser({ input })
+  },
+}
+
+const userAPI = ({ user }: AuthContext) => ({
   currentUser: async () => {
     return await findUserByID(user.id);
   },
-  // updateUserInformation: async (input: UserUpdateInput) => {
-  //   return await UserService.updateUserProfile(input);
-  // },
   getUserById: async (userId: string) => {
     if (user.id === userId) return user;
     return await findUserByID(userId);
   },
 });
 
-export { usersAPI };
+export { userAPI, unauthenticatedUserAPI };

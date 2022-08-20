@@ -10,12 +10,13 @@ export interface APIs {
   logsAPI: any;
   sequencesAPI: any;
   bucketsAPI: any;
-  usersAPI: any;
+  userAPI: any;
 }
 
 export interface Context {
   unauthenticatedAPIs: {
     passport: any;
+    userAPI: any;
   }
   loginUser?: any;
   user?: any;

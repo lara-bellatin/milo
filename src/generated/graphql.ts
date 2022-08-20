@@ -118,11 +118,6 @@ export enum LogType {
   Wait = 'WAIT'
 }
 
-export type LoginUserInput = {
-  email: Scalars['String'];
-  password: Scalars['String'];
-};
-
 export type Mutation = {
   __typename?: 'Mutation';
   cancelBucket?: Maybe<Bucket>;
@@ -322,7 +317,7 @@ export type UpdateSequenceInput = {
 export type UpdateUserInput = {
   birthday?: InputMaybe<Scalars['String']>;
   displayName?: InputMaybe<Scalars['String']>;
-  email?: InputMaybe<Scalars['String']>;
+  id: Scalars['String'];
   username?: InputMaybe<Scalars['String']>;
 };
 

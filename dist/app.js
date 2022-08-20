@@ -25,10 +25,12 @@ const express_session_1 = __importDefault(require("express-session"));
 const knex_1 = __importDefault(require("knex"));
 const objection_1 = require("objection");
 const knexfile_1 = __importDefault(require("./knexfile"));
+require("dotenv/config");
 const graphql_1 = __importDefault(require("./src/graphql"));
 const schema_2 = __importDefault(require("./src/graphql/schema"));
 const constants_1 = require("./src/utils/constants");
 const utils_1 = require("./src/auth/utils");
+const users_api_1 = require("./src/api/users_api");
 require("./src/auth/passport_strategies");
 const schema = (0, schema_1.makeExecutableSchema)({
     typeDefs: schema_2.default,
@@ -39,6 +41,7 @@ exports.apollo = new apollo_server_express_1.ApolloServer({
     context: ({ req, res }) => __awaiter(void 0, void 0, void 0, function* () {
         const baseCtx = {
             unauthenticatedAPIs: {
+                userAPI: users_api_1.unauthenticatedUserAPI,
                 passport: (0, graphql_passport_1.buildContext)({ req, res }),
             },
             origin: req.headers.origin,
@@ -75,7 +78,7 @@ function setupExpressApp(env) {
         const RedisStore = (0, connect_redis_1.default)(express_session_1.default);
         const redisClient = new ioredis_1.default({ host: process.env.REDIS_HOST, port: parseInt(process.env.REDIS_PORT || '') });
         session.store = new RedisStore({ client: redisClient });
-        session.secret = "stir-secret";
+        session.secret = "milo-secret";
     }
     app.use((0, cookie_parser_1.default)());
     app.use((0, express_session_1.default)(session));

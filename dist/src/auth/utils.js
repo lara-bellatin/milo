@@ -26,7 +26,7 @@ function buildAuthenticatedContex({ user, loginUser }) {
             logsAPI: (0, logs_api_1.logsAPI)({ user, loginUser }),
             sequencesAPI: (0, sequences_api_1.sequencesAPI)({ user, loginUser }),
             bucketsAPI: (0, buckets_api_1.bucketsAPI)({ user, loginUser }),
-            usersAPI: (0, users_api_1.usersAPI)({ user, loginUser }),
+            userAPI: (0, users_api_1.userAPI)({ user, loginUser }),
         },
     };
 }

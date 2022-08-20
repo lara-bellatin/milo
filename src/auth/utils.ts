@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
 import { AuthContext } from "../api/interfaces";
-import { usersAPI } from "../api/users_api";
+import { userAPI } from "../api/users_api";
 import { logsAPI } from "../api/logs_api";
 import { sequencesAPI } from "../api/sequences_api";
 import { bucketsAPI } from "../api/buckets_api";
@@ -28,7 +28,7 @@ export function buildAuthenticatedContex({ user, loginUser }: AuthContext) {
       logsAPI: logsAPI({ user, loginUser }),
       sequencesAPI: sequencesAPI({ user, loginUser }),
       bucketsAPI: bucketsAPI({ user, loginUser }),
-      usersAPI: usersAPI({ user, loginUser }),
+      userAPI: userAPI({ user, loginUser }),
     },
   };
 }

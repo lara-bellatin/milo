@@ -10,6 +10,12 @@ const schema = gql`
   ## SCALARS
   scalar JSON
 
+  ## PASSPORT MUTATION
+  type Mutation {
+    login(email: String!, password: String!): AuthPayload
+    logout: Boolean
+  }
+
 `
 
 

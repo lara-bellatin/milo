@@ -1,4 +1,5 @@
 import { apollo, setupExpressApp } from "./app";
+import "dotenv/config"
 
 
 const main = async () => {
@@ -8,6 +9,10 @@ const main = async () => {
 
     apollo.applyMiddleware({
         app,
+      });
+
+      app.get("/(:name)?", function (req, res) {
+        res.send(`wildcard request ${req.params.name}`);
       });
 
     const port: string = '4000';

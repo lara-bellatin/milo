@@ -17,13 +17,8 @@ exports.default = (0, apollo_server_express_1.gql) `
     password: String!
   }
 
-  input LoginUserInput {
-    email: String!
-    password: String!
-  }
-
   input UpdateUserInput {
-    email: String
+    id: String!
     displayName: String
     username: String
     birthday: String
@@ -61,8 +56,6 @@ exports.default = (0, apollo_server_express_1.gql) `
     createUser(input: CreateUserInput!): User!
     updateUser(input: UpdateUserInput!): User!
     deleteUser(id: String!): User!
-    login(email: String!, password: String!): AuthPayload
-    logout: Boolean
   }
 
 

@@ -10,12 +10,14 @@ import ExpressSession from "express-session";
 import Knex from "knex";
 import { Model } from "objection";
 import knexConfig from "./knexfile";
+import "dotenv/config"
 
 import resolvers from "./src/graphql";
 import typeDefs from "./src/graphql/schema";
 import { PRODUCTION } from "./src/utils/constants";
 import { buildAuthenticatedContex } from "./src/auth/utils";
 import User from "./src/users/models/User";
+import { unauthenticatedUserAPI } from "./src/api/users_api";
 import "./src/auth/passport_strategies";
 
 
@@ -29,7 +31,7 @@ export const apollo = new ApolloServer({
     context: async ({ req, res }) => {
         const baseCtx = {
           unauthenticatedAPIs: {
-            // adds some passport convenience methods for us
+            userAPI: unauthenticatedUserAPI,
             passport: buildContext({ req, res }),
           },
           origin: req.headers.origin as string,
@@ -79,8 +81,8 @@ export const apollo = new ApolloServer({
 export function setupExpressApp(env: string) {
   const app = express();
 
-  // Initialize DB conn
-  // @ts-ignore
+  // // Initialize DB conn
+  // // @ts-ignore
   const knex = Knex(knexConfig[env]);
   Model.knex(knex);
 
@@ -105,7 +107,7 @@ export function setupExpressApp(env: string) {
     const RedisStore = ConnectRedis(ExpressSession);
     const redisClient = new Redis({ host: process.env.REDIS_HOST, port: parseInt(process.env.REDIS_PORT || '') });
     session.store = new RedisStore({ client: redisClient });
-    session.secret = "stir-secret";
+    session.secret = "milo-secret";
   }
 
   app.use(cookieParser());

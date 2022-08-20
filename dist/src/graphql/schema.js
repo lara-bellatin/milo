@@ -13,6 +13,12 @@ const schema = (0, apollo_server_express_1.gql) `
   ## SCALARS
   scalar JSON
 
+  ## PASSPORT MUTATION
+  type Mutation {
+    login(email: String!, password: String!): AuthPayload
+    logout: Boolean
+  }
+
 `;
 exports.default = (0, merge_1.mergeTypeDefs)([schema, logs_1.default, sequences_1.default, buckets_1.default, users_1.default]);
 //# sourceMappingURL=schema.js.map

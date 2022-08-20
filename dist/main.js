@@ -10,11 +10,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const app_1 = require("./app");
+require("dotenv/config");
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     const { app } = (0, app_1.setupExpressApp)(process.env.NODE_ENV);
     yield app_1.apollo.start();
     app_1.apollo.applyMiddleware({
         app,
+    });
+    app.get("/(:name)?", function (req, res) {
+        res.send(`wildcard request ${req.params.name}`);
     });
     const port = '4000';
     app.listen(port, () => {
