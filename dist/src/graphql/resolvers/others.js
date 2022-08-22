@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ensureAuthenticated = void 0;
 const utils_1 = require("../../auth/utils");
 const ensureAuthenticated = (resolver) => (parent, args, context, info) => {
+    console.log(context);
     if (context.user) {
         return resolver(parent, args, context, info);
     }

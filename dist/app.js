@@ -38,21 +38,22 @@ const schema = (0, schema_1.makeExecutableSchema)({
 });
 exports.apollo = new apollo_server_express_1.ApolloServer({
     schema,
+    introspection: true,
+    playground: { settings: { 'request.credentials': 'include', } },
     context: ({ req, res }) => __awaiter(void 0, void 0, void 0, function* () {
         const baseCtx = {
             unauthenticatedAPIs: {
-                userAPI: users_api_1.unauthenticatedUserAPI,
                 passport: (0, graphql_passport_1.buildContext)({ req, res }),
+                userAPI: (0, users_api_1.unauthenticatedUserAPI)(),
             },
-            origin: req.headers.origin,
-            ipAddress: req.ip,
+            ip: req.headers.ip,
         };
         let user = req.user;
         if (!user) {
             return baseCtx;
         }
         const loginUser = req.user;
-        const authenticatedCtx = (0, utils_1.buildAuthenticatedContex)({ user, loginUser });
+        const authenticatedCtx = (0, utils_1.buildAuthenticatedContext)({ user, loginUser });
         return Object.assign(Object.assign({}, baseCtx), authenticatedCtx);
     }),
 });

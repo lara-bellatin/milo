@@ -3,6 +3,7 @@ import { clearActingUserIdCookie } from "../../auth/utils";
 
 
 export const ensureAuthenticated = (resolver: ResolverFn) => (parent: any, args: Args, context: Context, info: any) => {
+  console.log(context);
   if (context.user) {
     return resolver(parent, args, context, info);
   } else {
@@ -19,7 +20,6 @@ export default {
       return { ...ctx.loginUser };
     }),
   },
-
 
   Mutation: {
     login: async (_: any, { email, password }: Args, ctx: Context) => {

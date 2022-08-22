@@ -9,8 +9,8 @@ exports.up = function (knex) {
     table.text("due_date");
     table.text("completed_at");
     table.text("canceled_at");
-    table.text("created_at");
-    table.text("updated_at");
+    table.timestamp("created_at").defaultTo(knex.fn.now());
+    table.timestamp("updated_at").defaultTo(knex.fn.now());
   });
 };
 

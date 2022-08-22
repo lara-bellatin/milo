@@ -20,9 +20,8 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
     app.get("/(:name)?", function (req, res) {
         res.send(`wildcard request ${req.params.name}`);
     });
-    const port = '4000';
-    app.listen(port, () => {
-        console.log(`apollo started on localhost:${port}`);
+    app.listen(process.env.PORT, () => {
+        console.log(`apollo started on localhost:${process.env.PORT}`);
     });
 });
 main().catch((err) => {

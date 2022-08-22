@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import argon2 from "argon2";
+import bcrypt from "bcrypt";
 import { GraphQLLocalStrategy } from "graphql-passport";
 import passport from "passport";
 
@@ -22,6 +22,8 @@ passport.deserializeUser(async (id: string, cb) => {
 
 const superUserToken = process.env.SUPER_USER_TOKEN;
 
+// Log In
+
 passport.use(
   // @ts-ignore
   new GraphQLLocalStrategy(async (email: string, password: string, cb) => {
@@ -38,7 +40,8 @@ passport.use(
       return cb(null, user);
     }
 
-    const match = await argon2.verify(user.password, password);
+    const hash = bcrypt.hashSync(user.password, 10);
+    const match = await bcrypt.compare(user.password, hash);
     if (match) {
       return cb(null, user);
     }

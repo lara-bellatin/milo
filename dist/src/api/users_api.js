@@ -34,11 +34,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.unauthenticatedUserAPI = exports.userAPI = void 0;
 const user_service_1 = __importStar(require("../users/services/user_service"));
-const unauthenticatedUserAPI = {
+const unauthenticatedUserAPI = () => ({
     createUser: ({ input }) => __awaiter(void 0, void 0, void 0, function* () {
         return yield user_service_1.default.createUser({ input });
-    }),
-};
+    })
+});
 exports.unauthenticatedUserAPI = unauthenticatedUserAPI;
 const userAPI = ({ user }) => ({
     currentUser: () => __awaiter(void 0, void 0, void 0, function* () {
@@ -48,6 +48,12 @@ const userAPI = ({ user }) => ({
         if (user.id === userId)
             return user;
         return yield (0, user_service_1.findUserByID)(userId);
+    }),
+    updateUser: ({ input }) => __awaiter(void 0, void 0, void 0, function* () {
+        return yield user_service_1.default.updateUser({ input });
+    }),
+    deleteUser: ({ id }) => __awaiter(void 0, void 0, void 0, function* () {
+        return yield user_service_1.default.deleteUser({ id });
     }),
 });
 exports.userAPI = userAPI;

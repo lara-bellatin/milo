@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.datadir
+.env
+.next
+.next/
+client/out
+.vscode/*
+.eslintcache
+*.dump

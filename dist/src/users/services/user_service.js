@@ -16,7 +16,7 @@ exports.patchUserById = exports.findUserByID = exports.findUserByEmail = void 0;
 const objection_1 = require("objection");
 const apollo_server_express_1 = require("apollo-server-express");
 const nanoid_1 = require("nanoid");
-const argon2_1 = __importDefault(require("argon2"));
+const bcrypt_1 = __importDefault(require("bcrypt"));
 const User_1 = __importDefault(require("../models/User"));
 function findUserByEmail(email, trx) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -39,7 +39,7 @@ function findUserByID(id, trx) {
 exports.findUserByID = findUserByID;
 function patchUserById({ userId, data }) {
     return __awaiter(this, void 0, void 0, function* () {
-        return User_1.default.query().patchAndFetchById(userId, data).withGraphFetched("defaultOrganization");
+        return User_1.default.query().patchAndFetchById(userId, data);
     });
 }
 exports.patchUserById = patchUserById;
@@ -53,7 +53,8 @@ function createUser({ input, trx }) {
         if (existingUser) {
             throw new apollo_server_express_1.ApolloError("A user with this email already exists");
         }
-        const hashedPassword = yield argon2_1.default.hash(password);
+        const salt = yield bcrypt_1.default.genSalt(10);
+        const hashedPassword = yield bcrypt_1.default.hash(password, salt);
         const userId = "user_" + (0, nanoid_1.nanoid)();
         const user = yield objection_1.Model.transaction((trx) => __awaiter(this, void 0, void 0, function* () {
             const user = yield User_1.default.query(trx).insert({
@@ -97,8 +98,19 @@ function updateUser({ input, trx }) {
         });
     });
 }
+function deleteUser({ id }) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield patchUserById({
+            userId: id,
+            data: {
+                status: User_1.default.Status.DELETED,
+            }
+        });
+    });
+}
 exports.default = {
     createUser,
     updateUser,
+    deleteUser,
 };
 //# sourceMappingURL=user_service.js.map

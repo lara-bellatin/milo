@@ -15,9 +15,8 @@ const main = async () => {
         res.send(`wildcard request ${req.params.name}`);
       });
 
-    const port: string = '4000';
-    app.listen(port, () => {
-        console.log(`apollo started on localhost:${port}`);
+    app.listen(process.env.PORT, () => {
+        console.log(`apollo started on localhost:${process.env.PORT}`);
     });
 }
 

@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.buildAuthenticatedContex = exports.clearActingUserIdCookie = exports.setActingUserIdCookie = exports.getActingUserIdCookie = void 0;
+exports.buildAuthenticatedContext = exports.clearActingUserIdCookie = exports.setActingUserIdCookie = exports.getActingUserIdCookie = void 0;
 const users_api_1 = require("../api/users_api");
 const logs_api_1 = require("../api/logs_api");
 const sequences_api_1 = require("../api/sequences_api");
 const buckets_api_1 = require("../api/buckets_api");
-const actingUserIdCookieName = "stir-actingUserId";
+const actingUserIdCookieName = "milo-actingUserId";
 function getActingUserIdCookie(request) {
     return request.cookies[actingUserIdCookieName];
 }
@@ -18,7 +18,7 @@ function clearActingUserIdCookie(response) {
     response.clearCookie(actingUserIdCookieName);
 }
 exports.clearActingUserIdCookie = clearActingUserIdCookie;
-function buildAuthenticatedContex({ user, loginUser }) {
+function buildAuthenticatedContext({ user, loginUser }) {
     return {
         loginUser,
         user,
@@ -30,5 +30,5 @@ function buildAuthenticatedContex({ user, loginUser }) {
         },
     };
 }
-exports.buildAuthenticatedContex = buildAuthenticatedContex;
+exports.buildAuthenticatedContext = buildAuthenticatedContext;
 //# sourceMappingURL=utils.js.map

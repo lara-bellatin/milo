@@ -6,7 +6,7 @@ import { logsAPI } from "../api/logs_api";
 import { sequencesAPI } from "../api/sequences_api";
 import { bucketsAPI } from "../api/buckets_api";
 
-const actingUserIdCookieName = "stir-actingUserId";
+const actingUserIdCookieName = "milo-actingUserId";
 
 export function getActingUserIdCookie(request: Request) {
   return request.cookies[actingUserIdCookieName];
@@ -20,7 +20,7 @@ export function clearActingUserIdCookie(response: Response) {
   response.clearCookie(actingUserIdCookieName);
 }
 
-export function buildAuthenticatedContex({ user, loginUser }: AuthContext) {
+export function buildAuthenticatedContext({ user, loginUser }: AuthContext) {
   return {
     loginUser,
     user,

@@ -1,7 +1,7 @@
 import Objection, { Model } from "objection";
 import { ApolloError } from "apollo-server-express";
 import { nanoid } from "nanoid";
-import argon2 from "argon2";
+import bcrypt from "bcrypt";
 
 import User from "../models/User";
 import { CreateUserInput, UpdateUserInput } from "../../generated/graphql";
@@ -23,7 +23,7 @@ export async function findUserByID(id: string, trx?: Objection.Transaction) {
 }
 
 export async function patchUserById({ userId, data }: { userId: string; data: Partial<User> }) {
-  return User.query().patchAndFetchById(userId, data).withGraphFetched("defaultOrganization");
+  return User.query().patchAndFetchById(userId, data);
 }
 
 
@@ -41,7 +41,8 @@ async function createUser({ input, trx }: { input: CreateUserInput, trx?: Object
     throw new ApolloError("A user with this email already exists");
   }
 
-  const hashedPassword = await argon2.hash(password);
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(password, salt);
 
   const userId = "user_" + nanoid();
   const user = await Model.transaction(async (trx) => {
@@ -61,7 +62,7 @@ async function createUser({ input, trx }: { input: CreateUserInput, trx?: Object
 };
 
 
-async function updateUser({ input, trx }: { input: UpdateUserInput, trx: Objection.Transaction }) {
+async function updateUser({ input, trx }: { input: UpdateUserInput, trx?: Objection.Transaction }) {
   const { id, displayName, username, birthday } = input;
 
   const user = await findUserByID(id, trx);
@@ -92,12 +93,20 @@ async function updateUser({ input, trx }: { input: UpdateUserInput, trx: Objecti
       birthday: updateBirthday,
     }
   });
+}
 
-
+async function deleteUser({ id }: { id: string }) {
+  return await patchUserById({
+    userId: id,
+    data: {
+      status: User.Status.DELETED,
+    }
+  })
 }
 
 
 export default {
   createUser,
   updateUser,
+  deleteUser,
 }

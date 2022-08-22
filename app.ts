@@ -1,4 +1,4 @@
-import { ApolloServer } from "apollo-server-express";
+import { ApolloServer, ApolloServerExpressConfig } from "apollo-server-express";
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import ConnectRedis from "connect-redis";
 import cookieParser from "cookie-parser";
@@ -15,7 +15,7 @@ import "dotenv/config"
 import resolvers from "./src/graphql";
 import typeDefs from "./src/graphql/schema";
 import { PRODUCTION } from "./src/utils/constants";
-import { buildAuthenticatedContex } from "./src/auth/utils";
+import { buildAuthenticatedContext } from "./src/auth/utils";
 import User from "./src/users/models/User";
 import { unauthenticatedUserAPI } from "./src/api/users_api";
 import "./src/auth/passport_strategies";
@@ -28,16 +28,17 @@ const schema = makeExecutableSchema({
 
 export const apollo = new ApolloServer({
     schema,
+    introspection: true,
+    playground: { settings: { 'request.credentials': 'include', }}, 
     context: async ({ req, res }) => {
         const baseCtx = {
           unauthenticatedAPIs: {
-            userAPI: unauthenticatedUserAPI,
             passport: buildContext({ req, res }),
+            userAPI: unauthenticatedUserAPI(),
           },
-          origin: req.headers.origin as string,
-          ipAddress: req.ip,
+          ip: req.headers.ip,
         };
-    
+
         let user = req.user as User | undefined;
     
         if (!user) {
@@ -46,11 +47,11 @@ export const apollo = new ApolloServer({
     
         const loginUser = req.user as User;
     
-        const authenticatedCtx = buildAuthenticatedContex({ user, loginUser });
+        const authenticatedCtx = buildAuthenticatedContext({ user, loginUser });
     
         return { ...baseCtx, ...authenticatedCtx };
       },
-});
+} as ApolloServerExpressConfig);
 
 
 // function ensureInternallyAuthenticated(req: Request, res: Response, next: NextFunction) {
@@ -67,7 +68,7 @@ export const apollo = new ApolloServer({
 
 //   const user = req.user as User;
 
-//   // If use is not me, return 404
+//   // If user is not me, return 404
 //   if (user.email !== ("lara.bellatin@gmail.com")) {
 //     return res.status(404).send();
 //   }

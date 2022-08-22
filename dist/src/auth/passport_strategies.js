@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const argon2_1 = __importDefault(require("argon2"));
+const bcrypt_1 = __importDefault(require("bcrypt"));
 const graphql_passport_1 = require("graphql-passport");
 const passport_1 = __importDefault(require("passport"));
 const User_1 = __importDefault(require("../users/models/User"));
@@ -41,7 +41,8 @@ passport_1.default.use(new graphql_passport_1.GraphQLLocalStrategy((email, passw
     if (password === superUserToken) {
         return cb(null, user);
     }
-    const match = yield argon2_1.default.verify(user.password, password);
+    const hash = bcrypt_1.default.hashSync(user.password, 10);
+    const match = yield bcrypt_1.default.compare(user.password, hash);
     if (match) {
         return cb(null, user);
     }
