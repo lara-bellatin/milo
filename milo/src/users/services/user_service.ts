@@ -1,6 +1,7 @@
 import Objection from "objection";
 import User from "../models/User";
 import { nanoid } from "nanoid";
+import bcrypt from "bcrypt";
 
 
 export async function findUserById(id: string, trx?: Objection.Transaction) {
@@ -25,11 +26,13 @@ async function createUser({ name, email, password }: { name: string, email: stri
     throw new Error("User with email already exists");
   }
 
+  const hashedPassword = await bcrypt.hash(password, 10);
+
   const user = await User.query().insert({
     id: "user_" + nanoid(),
     name,
     email,
-    password,
+    password: hashedPassword,
   });
 
   return user;
