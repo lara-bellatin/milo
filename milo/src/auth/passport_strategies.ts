@@ -3,6 +3,7 @@ import passport from "passport";
 import { GraphQLLocalStrategy } from 'graphql-passport';
 import User from "../users/models/User";
 import { findUserByEmail, findUserById } from "../users/services/user_service";
+import bcrypt from "bcrypt";
 
 passport.serializeUser((user: User, done) => {
   done(null, user.id);
@@ -30,7 +31,9 @@ passport.use(
       return done(null, user);
     }
 
-    if (password === user.password) {
+    const match = await bcrypt.compare(password as string, user.password);
+
+    if (match) {
       return done(null, user);
     }
 
