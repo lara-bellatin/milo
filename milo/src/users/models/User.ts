@@ -5,12 +5,12 @@ import Log from "../../logs/models/Log";
 
 class User extends BaseModel {
     id!: string;
-    // username: string;
-    name!: string;
+    username: string;
+    displayName!: string;
     email!: string;
     password!: string;
-    // status: User.Status;
-    // birthday: string;
+    status: User.Status;
+    birthday: string;
     
 
     // relations
@@ -35,11 +35,11 @@ class User extends BaseModel {
 
 }
 
-// namespace User {
-//     export enum Status {
-//         ACTIVE = "ACTIVE",
-//         DELETED = "DELETED",
-//     }
-// }
+namespace User {
+    export enum Status {
+        ACTIVE = "ACTIVE",
+        DELETED = "DELETED",
+    }
+}
 
 export default User;

@@ -1,26 +1,8 @@
-import { gql } from 'apollo-server-express';
+import { mergeTypeDefs } from "@graphql-tools/merge";
 
-const schema = gql`
-  type User {
-    id: ID
-    name: String
-    email: String
-    password: String
-  }
+import users from "./schema/users";
+import logs from "./schema/logs";
+import buckets from "./schema/buckets";
+import sequences from "./schema/sequences";
 
-  type AuthPayload {
-    user: User
-  }
-
-  type Query {
-    currentUser: User
-  }
-
-  type Mutation {
-    login(email: String!, password: String!): AuthPayload
-    logout: Boolean
-    signup(name: String!, email: String!, password: String!): AuthPayload
-  }
-`;
-
-export default schema;
+export default mergeTypeDefs([users, logs, buckets, sequences]);

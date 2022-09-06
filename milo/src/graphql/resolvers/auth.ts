@@ -1,29 +1,35 @@
 import UserService from "../../users/services/user_service";
+import { Args, Context, ResolverFn } from "../interfaces/resolvers";
 
-const resolvers = {
+export const ensureAuthenticated = (resolver: ResolverFn) => (parent: any, args: Args, context: Context, info: any) => {
+  if (context.user) {
+    return resolver(parent, args, context, info);
+  } else {
+    throw new Error('Unauthorized');
+  }
+};
+
+export default {
   Query: {
     currentUser: (_: any, __: any, context: any) => {
-      console.log("running current user")
-      const user = context.user;
-      console.log(user);
-      return { user }
+      console.log(context.user)
+      return context.user;
     }
   },
   Mutation: {
-    login: async (_: any, { email, password }: { email: string, password: string }, context: any) => {
-      const { user } = await context.authenticate('graphql-local', { email, password });
-      await context.login(user);
+    login: async (_: any, { email, password }: { email: string, password: string }, context: Context) => {
+      const { user } = await context.auth.authenticate('graphql-local', { email, password });
+      await context.auth.login(user);
       return { user };
     },
     logout: (_: any, __: any, context: any) => {
       context.logout();
       return true;
     },
-    signup: async (_: any, { name, email, password }: { name: string, email: string, password: string }, context: any) => {
-      const newUser = await UserService.createUser({ name, email, password });
-      await context.login(newUser);
-      return { user: newUser };
-    },
+    createUser: async (_: any, { input }: Args, context: Context) => {
+      const user = await UserService.createUser(input);
+      context.auth.login(user);
+      return { user };
+    }
   },
 };
-export default resolvers;
