@@ -38,9 +38,6 @@ export default gql`
     postNotes: String
     type: LogType
     dueDate: String
-    sequenceId: String
-    sequenceOrder: String
-    bucketId: String
   }
 
   ## TYPES
@@ -81,6 +78,8 @@ export default gql`
     deleteLog(id: String!): Log
     resolveLog(id: String!): Log
     unresolveLog(id: String!): Log
+    addLogToBucket(id: String!, bucketId: String!): Log
+    addLogToSequence(id: String!, sequenceId: String!, sequenceOrder: String): Log
   }
 
 

@@ -13,6 +13,7 @@ class Sequence extends BaseModel {
     canceledAt: string;
     bucketId: string;
     userId: string;
+    ordered: boolean;
 
     // relations
     bucket: Bucket;

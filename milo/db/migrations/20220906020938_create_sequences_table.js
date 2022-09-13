@@ -5,6 +5,7 @@ exports.up = function (knex) {
     table.text("bucket_id").references("buckets.id");
     table.text("title");
     table.text("status");
+    table.boolean("ordered");
     table.text("completed_at");
     table.text("canceled_at");
     table.timestamp("created_at").defaultTo(knex.fn.now());

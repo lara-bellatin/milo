@@ -1,3 +1,6 @@
+import { nanoid } from "nanoid";
+import Log from "../../logs/models/Log";
+import LogService from "../../logs/services/log_services";
 import Sequence from "../models/Sequence";
 
 
@@ -22,11 +25,108 @@ async function getAllForUser({ userId }: { userId: string }) {
  * * * * * * *
  */
 
+async function createSequence({
+  userId,
+  title,
+  ordered,
+  bucketId,
+  logInput,
+}: {
+  userId: string;
+  title: string;
+  ordered: boolean;
+  bucketId?: string;
+  logInput: { 
+    title: string;
+    description?: string;
+    type: Log.Type;
+    preNotes?: string;
+    dueDate?: string;
+  }[];
+}) {
+  const sequence = await Sequence.query().insert({
+    id: "seq_" + nanoid(),
+    userId: userId,
+    title: title,
+    ordered: ordered,
+    status: Sequence.Status.ACTIVE,
+    bucketId: bucketId,
+  });
 
+  let orderNumber = 0;
+
+  return await Promise.all(
+    logInput.map( async (logInput) => {
+      const log = await LogService.createLog({
+        userId,
+        title: logInput.title,
+        description: logInput.description,
+        type: logInput.type,
+        preNotes: logInput.preNotes,
+        dueDate: logInput.dueDate,
+        bucketId: bucketId,
+        sequenceId: sequence.id,
+        sequenceOrder: ordered ? orderNumber : undefined,
+      });
+      orderNumber = orderNumber + 1;
+      return log;
+    })
+  )
+}
+
+async function updateSequence({
+  sequenceId,
+  title,
+  ordered,
+}: {
+  sequenceId: string;
+  title?: string;
+  ordered?: boolean;
+}) {
+  const sequence = await getSequenceById({ sequenceId });
+
+  if (!sequence) {
+    throw new Error("Sequence not found");
+  }
+
+  return await Sequence.query().patchAndFetchById(sequenceId, {
+    title: title || sequence.title,
+    ordered: ordered,
+  })
+}
+
+async function cancelSequence({ sequenceId }: { sequenceId: string }) {
+  const sequence = await getSequenceById({ sequenceId });
+
+  if (!sequence) {
+    throw new Error("Sequence not found")
+  }
+
+  return await Sequence.query().patchAndFetchById(sequenceId, {
+    status: Sequence.Status.CANCELED,
+  })
+}
+
+async function completeSequence({ sequenceId }: { sequenceId: string }) {
+  const sequence = await getSequenceById({ sequenceId });
+
+  if (!sequence) {
+    throw new Error("Sequence not found")
+  }
+
+  return await Sequence.query().patchAndFetchById(sequenceId, {
+    status: Sequence.Status.COMPLETED,
+  })
+}
 
 
 export default {
   // Queries
   getSequenceById,
   getAllForUser,
+  // Mutations,
+  createSequence,
+  updateSequence,
+  cancelSequence,
+  completeSequence,
 }

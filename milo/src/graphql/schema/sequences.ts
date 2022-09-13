@@ -11,22 +11,16 @@ export default gql`
   ## INPUTS
 
   input CreateSequenceInput {
-    id: String!
     title: String!
-    description: String
-    dueDate: String
-    completedAt: String
+    ordered: Boolean!
+    bucketId: String
     logInput: [CreateLogInput]
   }
 
   input UpdateSequenceInput {
     id: String!
     title: String
-    description: String
-    type: BucketType
-    dueDate: String
-    logInput: [CreateLogInput]
-    deletedLogs: [String!]
+    ordered: Boolean!
   }
 
   ## TYPES
@@ -51,7 +45,6 @@ export default gql`
   type Query {
     sequence(id: String!): Sequence
     sequences: [Sequence!]!
-    sequenceLogs(id: String!): [Log!]!
   }
 
   type Mutation {

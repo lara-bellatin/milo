@@ -1,10 +1,7 @@
 import { nanoid } from "nanoid";
-import Objection from "objection";
 import { DateTime } from "luxon";
 
 import Log from "../models/Log";
-import { CreateLogInput, UpdateLogInput } from "src/generated/graphql";
-
 
 /*
  * * * * * *
@@ -32,27 +29,41 @@ async function getAllForUser({ userId }: { userId: string }) {
 
 
 async function createLog({
-  input,
-  trx,
+  userId,
+  title,
+  description,
+  type,
+  preNotes,
+  dueDate,
+  sequenceId,
+  sequenceOrder,
+  bucketId,
 }: { 
-  input: CreateLogInput;
-  trx?: Objection.Transaction;
+  userId: string;
+  title: string;
+  description?: string;
+  type: Log.Type;
+  preNotes?: string;
+  dueDate?: string;
+  sequenceId?: string;
+  sequenceOrder?: number;
+  bucketId?: string;
 }) {
-
-  const { title, description, type, preNotes, dueDate, sequenceId, bucketId } = input;
 
   const LogType = Log.Type[type as keyof typeof Log.Type];
 
   const logId = "log_" + nanoid();
-  const log = await Log.query(trx).insert({
+  const log = await Log.query().insert({
     id: logId,
+    userId: userId,
     title: title,
-    description: description || undefined,
+    description: description,
     type: LogType,
-    preNotes: preNotes || undefined,
-    dueDate: dueDate || undefined,
-    sequenceId: sequenceId || undefined,
-    bucketId: bucketId || undefined,
+    preNotes: preNotes,
+    dueDate: dueDate,
+    sequenceId: sequenceId,
+    sequenceOrder: sequenceOrder,
+    bucketId: bucketId,
   });
 
   return log;
@@ -60,20 +71,30 @@ async function createLog({
 
 
 async function updateLog({
-  input,
-  trx
+  id,
+  title,
+  description,
+  preNotes,
+  postNotes,
+  type,
+  dueDate,
 }: {
-  input: UpdateLogInput;
-  trx?: Objection.Transaction;
+  id: string;
+  title?: string,
+  description?: string;
+  preNotes?: string;
+  postNotes?: string;
+  type?: Log.Type;
+  dueDate?: string;
 }) {
 
-  const log = await getLogById({ logId: input.id });
+  // how do you update sequence order?
+
+  const log = await getLogById({ logId: id });
 
   if (!log) {
     throw new Error("Log not found");
   }
-
-  const {title, description, preNotes, postNotes, type, dueDate, bucketId} = input;
 
   let updatedFields = {
     title: log.title,
@@ -109,11 +130,7 @@ async function updateLog({
     updatedFields.dueDate = dueDate;
   }
 
-  if (bucketId) {
-    updatedFields.bucketId = bucketId;
-  }
-
-  return await Log.query(trx).patchAndFetchById(input.id, updatedFields);
+  return await Log.query().patchAndFetchById(id, updatedFields);
 
 }
 
@@ -172,6 +189,19 @@ async function deleteLog({ logId }: { logId: string }) {
 }
 
 
+async function addLogToBucket({ logId, bucketId }: { logId: string, bucketId: string }) {
+  return await Log.query().patchAndFetchById(logId, { bucketId: bucketId });
+}
+
+async function addLogToSequence({ logId, sequenceId, sequenceOrder }: { logId: string, sequenceId: string, sequenceOrder?: number }) {
+  const sequenceLogs = await Log.query().where("sequenceId", sequenceId);
+  const seqOrder = sequenceOrder || sequenceLogs.length || 0;
+
+  return await Log.query().patchAndFetchById(logId, { sequenceId: sequenceId, sequenceOrder: seqOrder });
+
+}
+
+
 
 export default {
   // Queries
@@ -184,4 +214,6 @@ export default {
   resolveLog,
   unresolveLog,
   deleteLog,
+  addLogToBucket,
+  addLogToSequence,
 }

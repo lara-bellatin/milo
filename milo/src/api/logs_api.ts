@@ -1,5 +1,4 @@
 import { AuthContext } from "./interfaces";
-import { CreateLogInput, UpdateLogInput } from "src/generated/graphql";
 import LogService from "../logs/services/log_services";
 
 const logsAPI = ({ user }: AuthContext) => ({
@@ -9,28 +8,29 @@ const logsAPI = ({ user }: AuthContext) => ({
   getLogs: async () => {
     return await LogService.getAllForUser({ userId: user.id });
   },
-  createLog: async (input: CreateLogInput) => {
-    return await LogService.createLog({ input });
+  createLog: async (input: any) => {
+    return await LogService.createLog({ ...input, userId: user.id});
   },
-  updateLog: async (input: UpdateLogInput) => {
-    return await LogService.updateLog({ input })
+  updateLog: async (input: any) => {
+    return await LogService.updateLog(input);
+  },
+  resolveLog: async(logId: string) => {
+    return await LogService.resolveLog({ logId });
+  },
+  unresolveLog: async(logId: string) => {
+    return await LogService.unresolveLog({ logId });
+  },
+  deleteLog: async(logId: string) => {
+    return await LogService.deleteLog({ logId });
+  },
+  addLogToBucket: async(logId: string, bucketId: string) => {
+    return await LogService.addLogToBucket({ logId, bucketId });
+  },
+  addLogToSequence: async(logId: string, sequenceId: string, sequenceOrder?: number) => {
+    return await LogService.addLogToSequence({ logId, sequenceId, sequenceOrder });
   }
 
 });
 
 
 export { logsAPI };
-
-
-// type Query {
-//   log(id: String!): Log
-//   logs: [Log!]!
-// }
-
-// type Mutation {
-//   createLog(input: CreateLogInput!): Log!
-//   updateLog(input: UpdateLogInput!): Log!
-//   deleteLog(id: String!): Log
-//   resolveLog(id: String!): Log
-//   unresolveLog(id: String!): Log
-// }

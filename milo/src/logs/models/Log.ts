@@ -17,7 +17,7 @@ class Log extends BaseModel {
     resolvedAt: string;
     deletedAt: string;
     sequenceId: string;
-    sequenceOrder: string;
+    sequenceOrder: number;
     bucketId: string;
     userId!: string;
 

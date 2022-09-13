@@ -21,12 +21,10 @@ export default gql`
   ## INPUTS
 
   input CreateBucketInput {
-    id: String!
     title: String!
     description: String
     type: BucketType!
     dueDate: String
-    completedAt: String
   }
 
   input UpdateBucketInput {
