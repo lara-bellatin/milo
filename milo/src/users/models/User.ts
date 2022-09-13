@@ -1,6 +1,8 @@
 import { Model } from "objection";
 import BaseModel from "../../utils/BaseModel";
 import Log from "../../logs/models/Log";
+import Bucket from "../../buckets/models/Bucket";
+import Sequence from "../../sequences/models/Sequence";
 
 
 class User extends BaseModel {
@@ -15,6 +17,8 @@ class User extends BaseModel {
 
     // relations
     logs: Log[];
+    buckets: Bucket[];
+    sequences: Sequence[];
 
     static get tableName() {
         return "users";
@@ -30,6 +34,22 @@ class User extends BaseModel {
                   to: "logs.userId",
               },
             },
+            buckets: {
+                relation: Model.HasManyRelation,
+                modelClass: Bucket,
+                join: {
+                    from: "users.id",
+                    to: "buckets.userId",
+                },
+              },
+              sequences: {
+                relation: Model.HasManyRelation,
+                modelClass: Sequence,
+                join: {
+                    from: "users.id",
+                    to: "sequences.userId",
+                },
+              },
         };
     }
 

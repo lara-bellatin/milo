@@ -3,13 +3,12 @@ import { nanoid } from "nanoid";
 import bcrypt from "bcrypt";
 
 import User from "../models/User";
-import { CreateUserInput, UpdateUserInput } from "src/generated/graphql";
 
 
 export async function findUserById(id: string, trx?: Objection.Transaction) {
   return await User.query(trx)
     .findById(id)
-    .withGraphFetched("logs");
+    .withGraphFetched('[logs, buckets, sequences]');
 }
 
 export async function findUserByEmail(email: string, trx?: Objection.Transaction) {
@@ -21,8 +20,15 @@ export async function findUserByEmail(email: string, trx?: Objection.Transaction
   return user;
 }
 
-async function createUser(input: CreateUserInput) {
-  const { displayName, email, password } = input;
+async function createUser({
+  displayName,
+  email,
+  password,
+}: {
+  displayName: string;
+  email: string;
+  password: string;
+}) {
   const userWithEmailExists = await findUserByEmail(email);
 
   if (userWithEmailExists) {
@@ -36,6 +42,7 @@ async function createUser(input: CreateUserInput) {
     displayName,
     email,
     password: hashedPassword,
+    status: User.Status.ACTIVE,
   });
 
   return user;
@@ -47,13 +54,21 @@ async function deleteUser(id: string, trx?: Objection.Transaction) {
   })
 }
 
-async function updateUser(input: UpdateUserInput) {
-  const user = await findUserById(input.id);
+async function updateUser({
+  userId,
+  username,
+  displayName,
+  birthday,
+}: {
+  userId: string;
+  username?: string;
+  displayName?: string;
+  birthday?: string;
+}) {
+  const user = await findUserById(userId);
   if (!user) {
     throw new Error("User could not be found");
   }
-
-  const { username, displayName, birthday } = input;
 
   let updatedFields = {
     username: user.username,
@@ -73,7 +88,7 @@ async function updateUser(input: UpdateUserInput) {
     updatedFields.birthday = birthday;
   }
 
-  return await User.query().patchAndFetchById(input.id, updatedFields);
+  return await User.query().patchAndFetchById(userId, updatedFields);
 }
 
 

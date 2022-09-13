@@ -11,13 +11,13 @@ import Log from "../models/Log";
 
 async function getLogById({ logId }: { logId: string }) {
   return await Log.query().findById(logId)
-    .withGraphFetched(["owner", "bucket", "sequence"]);
+    .withGraphFetched('[owner, bucket, sequence]')
 }
 
 
 async function getAllForUser({ userId }: { userId: string }) {
   return await Log.query().where("userId", userId)
-    .withGraphFetched(["owner", "bucket", "sequence"]);
+    .withGraphFetched('[owner, bucket, sequence]');
 }
 
 
@@ -64,6 +64,7 @@ async function createLog({
     sequenceId: sequenceId,
     sequenceOrder: sequenceOrder,
     bucketId: bucketId,
+    status: Log.Status.UNRESOLVED,
   });
 
   return log;
@@ -71,7 +72,7 @@ async function createLog({
 
 
 async function updateLog({
-  id,
+  logId,
   title,
   description,
   preNotes,
@@ -79,7 +80,7 @@ async function updateLog({
   type,
   dueDate,
 }: {
-  id: string;
+  logId: string;
   title?: string,
   description?: string;
   preNotes?: string;
@@ -90,7 +91,7 @@ async function updateLog({
 
   // how do you update sequence order?
 
-  const log = await getLogById({ logId: id });
+  const log = await getLogById({ logId });
 
   if (!log) {
     throw new Error("Log not found");
@@ -130,7 +131,7 @@ async function updateLog({
     updatedFields.dueDate = dueDate;
   }
 
-  return await Log.query().patchAndFetchById(id, updatedFields);
+  return await Log.query().patchAndFetchById(logId, updatedFields);
 
 }
 
@@ -187,7 +188,6 @@ async function deleteLog({ logId }: { logId: string }) {
     deletedAt: DateTime.now().toISO(),
   })
 }
-
 
 async function addLogToBucket({ logId, bucketId }: { logId: string, bucketId: string }) {
   return await Log.query().patchAndFetchById(logId, { bucketId: bucketId });

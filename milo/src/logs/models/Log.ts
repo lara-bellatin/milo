@@ -48,7 +48,7 @@ class Log extends BaseModel {
                     to: "buckets.id",
                 },
             },
-            creator: {
+            owner: {
                 relation: Model.HasOneRelation,
                 modelClass: User,
                 join: {

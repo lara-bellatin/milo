@@ -3,8 +3,8 @@ import { ensureAuthenticated } from "./auth";
 
 export default {
   Query: {
-    log: ensureAuthenticated(async (_:any, { input }: Args, context: Context) => {
-      return await context.apis?.logsAPI.getLog(input);
+    log: ensureAuthenticated(async (_:any, { logId }: Args, context: Context) => {
+      return await context.apis?.logsAPI.getLog(logId);
     }),
     logs: ensureAuthenticated(async (_:any, { input }: Args, context: Context) => {
       return await context.apis?.logsAPI.getLogs(input);
@@ -17,20 +17,20 @@ export default {
     updateLog: ensureAuthenticated(async (_:any, { input }: Args, context: Context) => {
       return await context.apis?.logsAPI.updateLog(input);
     }),
-    deleteLog: ensureAuthenticated(async (_:any, { input }: Args, context: Context) => {
-      return await context.apis?.logsAPI.deleteLog(input);
+    deleteLog: ensureAuthenticated(async (_:any, { logId }: Args, context: Context) => {
+      return await context.apis?.logsAPI.deleteLog(logId);
     }),
-    resolveLog: ensureAuthenticated(async (_:any, { input }: Args, context: Context) => {
-      return await context.apis?.logsAPI.resolveLog(input);
+    resolveLog: ensureAuthenticated(async (_:any, { logId }: Args, context: Context) => {
+      return await context.apis?.logsAPI.resolveLog(logId);
     }),
-    unresolveLog: ensureAuthenticated(async (_:any, { input }: Args, context: Context) => {
-      return await context.apis?.logsAPI.unresolveLog(input);
+    unresolveLog: ensureAuthenticated(async (_:any, { logId }: Args, context: Context) => {
+      return await context.apis?.logsAPI.unresolveLog(logId);
     }),
-    addLogToBucket: ensureAuthenticated(async (_:any, { input }: Args, context: Context) => {
-      return await context.apis?.logsAPI.addLogToBucket(input);
+    addLogToBucket: ensureAuthenticated(async (_:any, { logId, bucketId }: Args, context: Context) => {
+      return await context.apis?.logsAPI.addLogToBucket(logId, bucketId);
     }),
-    addLogToSequence: ensureAuthenticated(async (_:any, { input }: Args, context: Context) => {
-      return await context.apis?.logsAPI.addLogToSequence(input);
+    addLogToSequence: ensureAuthenticated(async (_:any, { logId, sequenceId, sequenceOrder }: Args, context: Context) => {
+      return await context.apis?.logsAPI.addLogToSequence(logId, sequenceId, sequenceOrder);
     }),
   },
 };

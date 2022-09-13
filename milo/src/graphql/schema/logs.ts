@@ -31,7 +31,7 @@ export default gql`
   }
 
   input UpdateLogInput {
-    id: String!
+    logId: String!
     title: String
     description: String
     preNotes: String
@@ -68,18 +68,18 @@ export default gql`
   ## ENDPOINTS
 
   type Query {
-    log(id: String!): Log
+    log(logId: String!): Log
     logs: [Log!]!
   }
 
   type Mutation {
     createLog(input: CreateLogInput!): Log!
     updateLog(input: UpdateLogInput!): Log!
-    deleteLog(id: String!): Log
-    resolveLog(id: String!): Log
-    unresolveLog(id: String!): Log
-    addLogToBucket(id: String!, bucketId: String!): Log
-    addLogToSequence(id: String!, sequenceId: String!, sequenceOrder: String): Log
+    deleteLog(logId: String!): Log
+    resolveLog(logId: String!): Log
+    unresolveLog(logId: String!): Log
+    addLogToBucket(logId: String!, bucketId: String!): Log
+    addLogToSequence(logId: String!, sequenceId: String!, sequenceOrder: String): Log
   }
 
 

@@ -11,11 +11,13 @@ import Sequence from "../models/Sequence";
  */
 
 async function getSequenceById({ sequenceId }: { sequenceId: string }) {
-  return await Sequence.query().findById(sequenceId);
+  return await Sequence.query().findById(sequenceId)
+    .withGraphFetched('[owner, bucket, logs]');
 }
 
 async function getAllForUser({ userId }: { userId: string }) {
-  return await Sequence.query().where("userId", userId);
+  return await Sequence.query().where("userId", userId)
+    .withGraphFetched('[owner, bucket, logs]');
 }
 
 
@@ -53,11 +55,9 @@ async function createSequence({
     bucketId: bucketId,
   });
 
-  let orderNumber = 0;
-
-  return await Promise.all(
-    logInput.map( async (logInput) => {
-      const log = await LogService.createLog({
+  await Promise.all(
+    logInput.map( async (logInput, index) => {
+      return LogService.createLog({
         userId,
         title: logInput.title,
         description: logInput.description,
@@ -66,12 +66,12 @@ async function createSequence({
         dueDate: logInput.dueDate,
         bucketId: bucketId,
         sequenceId: sequence.id,
-        sequenceOrder: ordered ? orderNumber : undefined,
+        sequenceOrder: index,
       });
-      orderNumber = orderNumber + 1;
-      return log;
     })
-  )
+  );
+
+  return sequence;
 }
 
 async function updateSequence({
@@ -83,6 +83,7 @@ async function updateSequence({
   title?: string;
   ordered?: boolean;
 }) {
+
   const sequence = await getSequenceById({ sequenceId });
 
   if (!sequence) {

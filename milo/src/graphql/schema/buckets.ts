@@ -28,7 +28,7 @@ export default gql`
   }
 
   input UpdateBucketInput {
-    id: String!
+    bucketId: String!
     title: String
     description: String
     type: BucketType
@@ -51,22 +51,22 @@ export default gql`
     userId: String!
     sequences: [Sequence]
     logs: [Log]
-    owner: User!
+    owner: User
   }
 
 
   ## ENDPOINTS
 
   type Query {
-    bucket(id: String!): Bucket
+    bucket(bucketId: String!): Bucket
     buckets: [Bucket!]!
   }
 
   type Mutation {
     createBucket(input: CreateBucketInput!): Bucket!
     updateBucket(input: UpdateBucketInput!): Bucket!
-    cancelBucket(id: String!): Bucket
-    completeBucket(id: String!): Bucket
+    cancelBucket(bucketId: String!): Bucket
+    completeBucket(bucketId: String!): Bucket
   }
 
 

@@ -3,8 +3,8 @@ import { ensureAuthenticated } from "./auth";
 
 export default {
   Query: {
-    sequence: ensureAuthenticated(async (_:any, { input }: Args, context: Context) => {
-      return await context.apis?.sequencesAPI.getSequence(input);
+    sequence: ensureAuthenticated(async (_:any, { sequenceId }: Args, context: Context) => {
+      return await context.apis?.sequencesAPI.getSequence(sequenceId);
     }),
     sequences: ensureAuthenticated(async (_:any, __: any, context: Context) => {
       return await context.apis?.sequencesAPI.getSequences();
@@ -17,11 +17,11 @@ export default {
     updateSequence: ensureAuthenticated(async (_:any, { input }: Args, context: Context) => {
       return await context.apis?.sequencesAPI.updateSequence(input);
     }),
-    cancelSequence: ensureAuthenticated(async (_:any, { input }: Args, context: Context) => {
-      return await context.apis?.sequencesAPI.cancelSequence(input);
+    cancelSequence: ensureAuthenticated(async (_:any, { sequenceId }: Args, context: Context) => {
+      return await context.apis?.sequencesAPI.cancelSequence(sequenceId);
     }),
-    completeSequence: ensureAuthenticated(async (_:any, { input }: Args, context: Context) => {
-      return await context.apis?.sequencesAPI.completeSequence(input);
+    completeSequence: ensureAuthenticated(async (_:any, { sequenceId }: Args, context: Context) => {
+      return await context.apis?.sequencesAPI.completeSequence(sequenceId);
     }),
   },
 };

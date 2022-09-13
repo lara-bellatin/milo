@@ -2,14 +2,14 @@ import { AuthContext } from "./interfaces";
 import LogService from "../logs/services/log_services";
 
 const logsAPI = ({ user }: AuthContext) => ({
-  getLog: async ({ id }: { id: string }) => {
-    return await LogService.getLogById({ logId: id });
+  getLog: async (logId: string) => {
+    return await LogService.getLogById({ logId });
   },
   getLogs: async () => {
     return await LogService.getAllForUser({ userId: user.id });
   },
   createLog: async (input: any) => {
-    return await LogService.createLog({ ...input, userId: user.id});
+    return await LogService.createLog({ userId: user.id, ...input });
   },
   updateLog: async (input: any) => {
     return await LogService.updateLog(input);

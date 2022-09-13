@@ -9,11 +9,13 @@ import Bucket from "../models/Bucket";
  */
 
 async function getBucketById({ bucketId }: { bucketId: string }) {
-  return await Bucket.query().findById(bucketId);
+  return await Bucket.query().findById(bucketId)
+    .withGraphFetched('[owner, sequences, logs]');
 }
 
 async function getAllForUser({ userId }: { userId: string }) {
-  return await Bucket.query().where("userId", userId);
+  return await Bucket.query().where("userId", userId)
+    .withGraphFetched('[owner, sequences, logs]');
 }
 
 
@@ -43,6 +45,7 @@ async function createBucket({
     description,
     type,
     dueDate,
+    status: Bucket.Status.NOT_STARTED,
   })
 }
 
@@ -85,7 +88,7 @@ async function cancelBucket({ bucketId }: { bucketId: string }) {
     throw new Error("Bucket could not be found");
   }
 
-  if([Bucket.Status.CANCELED, Bucket.Status.ARCHIVED, Bucket.Status.COMPLETED]) {
+  if([Bucket.Status.CANCELED, Bucket.Status.ARCHIVED, Bucket.Status.COMPLETED].includes(bucket.status)) {
     throw new Error("Bucket cannot be canceled")
   }
 
@@ -100,7 +103,7 @@ async function completeBucket({ bucketId }: { bucketId: string }) {
     throw new Error("Bucket could not be found");
   }
 
-  if([Bucket.Status.CANCELED, Bucket.Status.ARCHIVED, Bucket.Status.COMPLETED]) {
+  if([Bucket.Status.CANCELED, Bucket.Status.ARCHIVED, Bucket.Status.COMPLETED].includes(bucket.status)) {
     throw new Error("Bucket cannot be completed")
   }
 

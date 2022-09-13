@@ -17,7 +17,7 @@ export default gql`
   }
 
   input UpdateUserInput {
-    id: String!
+    userId: String!
     displayName: String
     username: String
     birthday: String
@@ -55,7 +55,7 @@ export default gql`
     login(email: String!, password: String!): AuthPayload
     logout: Boolean
     updateUser(input: UpdateUserInput!): User
-    deleteUser(id: String!): User!
+    deleteUser(userId: String!): User!
   }
 
 

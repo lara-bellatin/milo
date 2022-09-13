@@ -12,7 +12,6 @@ export const ensureAuthenticated = (resolver: ResolverFn) => (parent: any, args:
 export default {
   Query: {
     currentUser: (_: any, __: any, context: any) => {
-      console.log(context.user)
       return context.user;
     }
   },
@@ -23,7 +22,7 @@ export default {
       return { user };
     },
     logout: (_: any, __: any, context: any) => {
-      context.logout();
+      context.auth.logout();
       return true;
     },
     createUser: async (_: any, { input }: Args, context: Context) => {
