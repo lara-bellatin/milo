@@ -12,105 +12,79 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.patchUserById = exports.findUserByID = exports.findUserByEmail = void 0;
-const objection_1 = require("objection");
-const apollo_server_express_1 = require("apollo-server-express");
+exports.findUserByEmail = exports.findUserById = void 0;
 const nanoid_1 = require("nanoid");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const User_1 = __importDefault(require("../models/User"));
+function findUserById(id, trx) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield User_1.default.query(trx)
+            .findById(id)
+            .withGraphFetched('[logs, buckets, sequences]');
+    });
+}
+exports.findUserById = findUserById;
 function findUserByEmail(email, trx) {
     return __awaiter(this, void 0, void 0, function* () {
         const user = yield User_1.default.query(trx)
             .findOne({
             email: email.trim().toLowerCase(),
         })
-            .withGraphFetched("[buckets, sequences, logs]");
+            .withGraphFetched("logs");
         return user;
     });
 }
 exports.findUserByEmail = findUserByEmail;
-function findUserByID(id, trx) {
+function createUser({ displayName, email, password, }) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield User_1.default.query(trx)
-            .findById(id)
-            .withGraphFetched("[buckets, sequences, logs]");
-    });
-}
-exports.findUserByID = findUserByID;
-function patchUserById({ userId, data }) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return User_1.default.query().patchAndFetchById(userId, data);
-    });
-}
-exports.patchUserById = patchUserById;
-function createUser({ input, trx }) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const { displayName, email, password } = input;
-        if (!email) {
-            throw new apollo_server_express_1.ApolloError("An email is required to create a new user");
+        const userWithEmailExists = yield findUserByEmail(email);
+        if (userWithEmailExists) {
+            throw new Error("User with email already exists");
         }
-        const existingUser = yield findUserByEmail(email, trx);
-        if (existingUser) {
-            throw new apollo_server_express_1.ApolloError("A user with this email already exists");
-        }
-        const salt = yield bcrypt_1.default.genSalt(10);
-        const hashedPassword = yield bcrypt_1.default.hash(password, salt);
-        const userId = "user_" + (0, nanoid_1.nanoid)();
-        const user = yield objection_1.Model.transaction((trx) => __awaiter(this, void 0, void 0, function* () {
-            const user = yield User_1.default.query(trx).insert({
-                id: userId,
-                displayName,
-                email,
-                status: User_1.default.Status.ACTIVE,
-                password: hashedPassword,
-            });
-            return user;
-        }));
+        const hashedPassword = yield bcrypt_1.default.hash(password, 10);
+        const user = yield User_1.default.query().insert({
+            id: "user_" + (0, nanoid_1.nanoid)(),
+            displayName,
+            email,
+            password: hashedPassword,
+            status: User_1.default.Status.ACTIVE,
+        });
         return user;
     });
 }
-;
-function updateUser({ input, trx }) {
+function deleteUser(id, trx) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { id, displayName, username, birthday } = input;
-        const user = yield findUserByID(id, trx);
-        if (!user)
-            throw new apollo_server_express_1.ApolloError("User doesn't exist");
-        let updateDisplayName = user.displayName;
-        let updateUsername = user.username;
-        let updateBirthday = user.birthday;
-        if (displayName) {
-            updateDisplayName = displayName;
-        }
-        if (username) {
-            updateUsername = username;
-        }
-        if (birthday) {
-            updateBirthday = birthday;
-        }
-        return yield patchUserById({
-            userId: user.id,
-            data: {
-                displayName: updateDisplayName,
-                username: updateUsername,
-                birthday: updateBirthday,
-            }
+        return yield User_1.default.query(trx).patchAndFetchById(id, {
+            status: User_1.default.Status.DELETED,
         });
     });
 }
-function deleteUser({ id }) {
+function updateUser({ userId, username, displayName, birthday, }) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield patchUserById({
-            userId: id,
-            data: {
-                status: User_1.default.Status.DELETED,
-            }
-        });
+        const user = yield findUserById(userId);
+        if (!user) {
+            throw new Error("User could not be found");
+        }
+        let updatedFields = {
+            username: user.username,
+            displayName: user.displayName,
+            birthday: user.birthday,
+        };
+        if (username) {
+            updatedFields.username = username;
+        }
+        if (displayName) {
+            updatedFields.displayName = displayName;
+        }
+        if (birthday) {
+            updatedFields.birthday = birthday;
+        }
+        return yield User_1.default.query().patchAndFetchById(userId, updatedFields);
     });
 }
 exports.default = {
     createUser,
-    updateUser,
     deleteUser,
+    updateUser,
 };
 //# sourceMappingURL=user_service.js.map

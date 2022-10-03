@@ -1,19 +1,18 @@
 import React from "react";
 
 import { Flex } from "components/core/Flex";
-import { Frame } from "components/layouts/frame";
+import { Text } from "components/core/Text";
 
 import LoginForm from "./LoginForm";
 
 export default function Login() {
 
   return (
-    <Frame.Outer>
-      <Frame.Inner>
+    <Flex align="center" justify="center" css={{width:"fill", height:"fill"}}>
         <Flex direction="column" align="center" justify="center" css={{ height: "100%", alignSelf: "center" }}>
+          <Text type="displayLarge">Welcome to milo!</Text>
           <LoginForm />
         </Flex>
-      </Frame.Inner>
-    </Frame.Outer>
+      </Flex>
   );
 }

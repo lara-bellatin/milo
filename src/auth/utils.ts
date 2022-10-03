@@ -1,34 +1,18 @@
-import { Request, Response } from "express";
-
 import { AuthContext } from "../api/interfaces";
-import { userAPI } from "../api/users_api";
-import { logsAPI } from "../api/logs_api";
-import { sequencesAPI } from "../api/sequences_api";
+import { userAPI } from "../api/user_api";
 import { bucketsAPI } from "../api/buckets_api";
+import { sequencesAPI } from "../api/sequences_api";
+import { logsAPI } from "../api/logs_api";
 
-const actingUserIdCookieName = "milo-actingUserId";
 
-export function getActingUserIdCookie(request: Request) {
-  return request.cookies[actingUserIdCookieName];
-}
-
-export function setActingUserIdCookie(response: Response, userId: string) {
-  response.cookie(actingUserIdCookieName, userId);
-}
-
-export function clearActingUserIdCookie(response: Response) {
-  response.clearCookie(actingUserIdCookieName);
-}
-
-export function buildAuthenticatedContext({ user, loginUser }: AuthContext) {
+export function buildAuthenticatedContext({ user }: AuthContext) {
   return {
-    loginUser,
     user,
     apis: {
-      logsAPI: logsAPI({ user, loginUser }),
-      sequencesAPI: sequencesAPI({ user, loginUser }),
-      bucketsAPI: bucketsAPI({ user, loginUser }),
-      userAPI: userAPI({ user, loginUser }),
+      userAPI: userAPI({ user }),
+      bucketsAPI: bucketsAPI({ user }),
+      sequencesAPI: sequencesAPI({ user }),
+      logsAPI: logsAPI({ user }),
     },
   };
 }

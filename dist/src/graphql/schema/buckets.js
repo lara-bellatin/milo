@@ -22,16 +22,14 @@ exports.default = (0, apollo_server_express_1.gql) `
   ## INPUTS
 
   input CreateBucketInput {
-    id: String!
     title: String!
     description: String
     type: BucketType!
     dueDate: String
-    completedAt: String
   }
 
   input UpdateBucketInput {
-    id: String!
+    bucketId: String!
     title: String
     description: String
     type: BucketType
@@ -51,23 +49,25 @@ exports.default = (0, apollo_server_express_1.gql) `
     updatedAt: String
     completedAt: String
     canceledAt: String
+    userId: String!
     sequences: [Sequence]
     logs: [Log]
+    owner: User
   }
 
 
   ## ENDPOINTS
 
   type Query {
-    bucket(id: String!): Bucket
+    bucket(bucketId: String!): Bucket
     buckets: [Bucket!]!
   }
 
   type Mutation {
     createBucket(input: CreateBucketInput!): Bucket!
     updateBucket(input: UpdateBucketInput!): Bucket!
-    cancelBucket(id: String!): Bucket
-    completeBucket(id: String!): Bucket
+    cancelBucket(bucketId: String!): Bucket
+    completeBucket(bucketId: String!): Bucket
   }
 
 

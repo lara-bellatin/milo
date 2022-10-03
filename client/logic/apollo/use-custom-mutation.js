@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-export const useCustomMutation = ({ client, mutationGql, variables, mobileActionToken = null }) => {
+export const useCustomMutation = ({ client, mutationGql, variables }) => {
   const [data, setData] = useState();
   const [isRunning, setIsRunning] = useState();
 
@@ -13,14 +13,6 @@ export const useCustomMutation = ({ client, mutationGql, variables, mobileAction
           mutation: mutationGql,
           variables,
         };
-
-        if (mobileActionToken) {
-          mutationOptions.context = {
-            headers: {
-              "mobile-action-token": mobileActionToken,
-            },
-          };
-        }
 
         const result = await client.mutate(mutationOptions);
 

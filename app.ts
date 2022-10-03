@@ -1,103 +1,80 @@
-import { ApolloServer, ApolloServerExpressConfig } from "apollo-server-express";
+
+import { ApolloServer } from "apollo-server-express";
 import { makeExecutableSchema } from "@graphql-tools/schema";
+import express from "express";
+import { Model } from "objection";
+import ExpressSession from "express-session";
+import Redis from "ioredis";
 import ConnectRedis from "connect-redis";
 import cookieParser from "cookie-parser";
-import Redis from "ioredis";
-import express from "express";
-import { buildContext } from "graphql-passport";
-import passport from "passport";
-import ExpressSession from "express-session";
+import bodyParser from "body-parser";
+import { v4 as uuidv4 } from "uuid";
 import Knex from "knex";
-import { Model } from "objection";
 import knexConfig from "./knexfile";
-import "dotenv/config"
 
-import resolvers from "./src/graphql";
 import typeDefs from "./src/graphql/schema";
-import { PRODUCTION } from "./src/utils/constants";
+import resolvers from "./src/graphql";
+import passport from "passport";
 import { buildAuthenticatedContext } from "./src/auth/utils";
 import User from "./src/users/models/User";
-import { unauthenticatedUserAPI } from "./src/api/users_api";
+
 import "./src/auth/passport_strategies";
+import "dotenv/config";
+import { buildContext } from "graphql-passport";
 
 
 const schema = makeExecutableSchema({
-    typeDefs,
-    resolvers,
-  });
+  typeDefs,
+  resolvers,
+})
 
 export const apollo = new ApolloServer({
-    schema,
-    introspection: true,
-    playground: { settings: { 'request.credentials': 'include', }}, 
-    context: async ({ req, res }) => {
-        const baseCtx = {
-          unauthenticatedAPIs: {
-            passport: buildContext({ req, res }),
-            userAPI: unauthenticatedUserAPI(),
-          },
-          ip: req.headers.ip,
-        };
+  schema,
+  introspection: true,
+  context: ({ req, res }) => {
+    const baseCtx = {
+      auth: buildContext({ req, res }),
+    }
 
-        let user = req.user as User | undefined;
+    const user = req.user as User | undefined;
+
+    if (!user) {
+      return baseCtx;
+    }
+
+    const authenticatedCtx = buildAuthenticatedContext({ user });
     
-        if (!user) {
-          return baseCtx;
-        }
-    
-        const loginUser = req.user as User;
-    
-        const authenticatedCtx = buildAuthenticatedContext({ user, loginUser });
-    
-        return { ...baseCtx, ...authenticatedCtx };
-      },
-} as ApolloServerExpressConfig);
-
-
-// function ensureInternallyAuthenticated(req: Request, res: Response, next: NextFunction) {
-//   // Don't authenticate locally
-//   if (process.env.NODE_ENV === DEVELOPMENT || process.env.NODE_ENV === TEST) {
-//     next();
-//     return;
-//   }
-
-//   // If no user in session, return page not found error
-//   if (!req.user) {
-//     return res.status(404).send();
-//   }
-
-//   const user = req.user as User;
-
-//   // If user is not me, return 404
-//   if (user.email !== ("lara.bellatin@gmail.com")) {
-//     return res.status(404).send();
-//   }
-
-//   // Authenticated user is valid
-//   next();
-//   return;
-// }
+    return { ...baseCtx, ...authenticatedCtx };
+  },
+})
 
 
 export function setupExpressApp(env: string) {
   const app = express();
 
-  // // Initialize DB conn
-  // // @ts-ignore
+  // Initialize DB conn
+  // @ts-ignore
   const knex = Knex(knexConfig[env]);
   Model.knex(knex);
 
   const session: any = {
     name: "milo-sid",
+    genid: () => uuidv4(),
+    secret: process.env.SECRET || 'milo-secret',
     resave: false,
     saveUninitialized: false,
-    cookie: {},
+    cookie: {
+      httpOnly: false,
+      maxAge: 1000 * 60 * 60 * 24 * 365 * 7,
+    },
   };
 
-  if (process.env.NODE_ENV === PRODUCTION) {
-    const RedisStore = ConnectRedis(ExpressSession);
-    const redisClient = new Redis({ host: process.env.REDIS_HOST, port: parseInt(process.env.REDIS_PORT || '') });
 
+  if (process.env.NODE_ENV === "production") {
+    const RedisStore = ConnectRedis(ExpressSession);
+    const redisClient = new Redis(process.env.REDIS_URL!);
+
+    session.cookie.sameSite = "none",
     session.cookie.secure = true;
     app.set("trust proxy", 1);
 
@@ -106,12 +83,15 @@ export function setupExpressApp(env: string) {
     session.secret = process.env.SESSION_SECRET;
   } else {
     const RedisStore = ConnectRedis(ExpressSession);
-    const redisClient = new Redis({ host: process.env.REDIS_HOST, port: parseInt(process.env.REDIS_PORT || '') });
+    const redisClient = new Redis(process.env.REDIS_URL!);
     session.store = new RedisStore({ client: redisClient });
     session.secret = "milo-secret";
   }
 
+  
+
   app.use(cookieParser());
+  app.use(bodyParser.json());
   app.use(ExpressSession(session));
   app.use(passport.initialize());
   app.use(passport.session());

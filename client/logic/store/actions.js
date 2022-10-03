@@ -14,10 +14,10 @@ export default {
     state.user = value;
   },
 
-  "loginUser.set"({ state, payload }) {
-    const { value } = payload;
 
-    state.loginUser = value;
+  "authentication.clear"({ state }) {
+    state.user = null;
+    state.organization = null;
   },
 
   "authentication.clear"({ state }) {

@@ -1,6 +1,6 @@
 import { borderVariants } from "theme";
 
-import { styled } from "stitches.config";
+import { styled } from "../../stitches.config";
 
 export type FlexProps = React.ComponentProps<typeof Flex>;
 

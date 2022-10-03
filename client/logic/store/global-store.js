@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import Store from "./store";
 import actions from "./actions";
-import defaultState from "./state";
 
 let store;
 
@@ -29,7 +28,7 @@ const get = ({ initialState }) => {
 };
 
 const useStore = (stateObject) => {
-  let instance = get({ initialState: stateObject || defaultState });
+  let instance = get({ initialState: stateObject });
   const id = Math.random().toString();
   const [state, setState] = useState(instance.state);
 

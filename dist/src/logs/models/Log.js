@@ -30,7 +30,7 @@ class Log extends BaseModel_1.default {
                     to: "buckets.id",
                 },
             },
-            creator: {
+            owner: {
                 relation: objection_1.Model.HasOneRelation,
                 modelClass: User_1.default,
                 join: {
@@ -49,6 +49,7 @@ class Log extends BaseModel_1.default {
         Type["TASK"] = "TASK";
         Type["WAIT"] = "WAIT";
         Type["EVENT"] = "EVENT";
+        Type["PIN"] = "PIN";
     })(Type = Log.Type || (Log.Type = {}));
     let Status;
     (function (Status) {

@@ -13,14 +13,35 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.logsAPI = void 0;
-const log_service_1 = __importDefault(require("../logs/services/log_service"));
+const log_services_1 = __importDefault(require("../logs/services/log_services"));
 const logsAPI = ({ user }) => ({
-    getLog: ({ id }) => __awaiter(void 0, void 0, void 0, function* () {
-        return yield log_service_1.default.getLogById({ logId: id });
+    getLog: (logId) => __awaiter(void 0, void 0, void 0, function* () {
+        return yield log_services_1.default.getLogById({ logId });
     }),
     getLogs: () => __awaiter(void 0, void 0, void 0, function* () {
-        return yield log_service_1.default.getAllForUser({ userId: user.id });
+        return yield log_services_1.default.getAllForUser({ userId: user.id });
     }),
+    createLog: (input) => __awaiter(void 0, void 0, void 0, function* () {
+        return yield log_services_1.default.createLog(Object.assign({ userId: user.id }, input));
+    }),
+    updateLog: (input) => __awaiter(void 0, void 0, void 0, function* () {
+        return yield log_services_1.default.updateLog(input);
+    }),
+    resolveLog: (logId) => __awaiter(void 0, void 0, void 0, function* () {
+        return yield log_services_1.default.resolveLog({ logId });
+    }),
+    unresolveLog: (logId) => __awaiter(void 0, void 0, void 0, function* () {
+        return yield log_services_1.default.unresolveLog({ logId });
+    }),
+    deleteLog: (logId) => __awaiter(void 0, void 0, void 0, function* () {
+        return yield log_services_1.default.deleteLog({ logId });
+    }),
+    addLogToBucket: (logId, bucketId) => __awaiter(void 0, void 0, void 0, function* () {
+        return yield log_services_1.default.addLogToBucket({ logId, bucketId });
+    }),
+    addLogToSequence: (logId, sequenceId, sequenceOrder) => __awaiter(void 0, void 0, void 0, function* () {
+        return yield log_services_1.default.addLogToSequence({ logId, sequenceId, sequenceOrder });
+    })
 });
 exports.logsAPI = logsAPI;
 //# sourceMappingURL=logs_api.js.map

@@ -7,18 +7,16 @@ export interface Args {
 }
 
 export interface APIs {
-  logsAPI: any;
-  sequencesAPI: any;
-  bucketsAPI: any;
   userAPI: any;
+  logsAPI: any;
+  bucketsAPI: any;
+  sequencesAPI: any;
 }
 
 export interface Context {
-  unauthenticatedAPIs: {
-    passport: any;
-    userAPI: any;
-  }
-  loginUser?: any;
+  auth: any,
   user?: any;
   apis?: APIs;
+  origin?: string;
+  ipAddress?: string;
 }

@@ -17,12 +17,6 @@
     "incremental": true,
     "noUnusedLocals": true
   },
-  "include": [
-    ".",
-    "next-env.d.ts",
-    "**/**/*.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "**/**/*.tsx",],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "cypress/support/index.js", "jest.config.js"],
   "exclude": ["node_modules", "old-src"]
 }

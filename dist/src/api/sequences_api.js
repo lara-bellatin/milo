@@ -15,11 +15,23 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.sequencesAPI = void 0;
 const sequence_service_1 = __importDefault(require("../sequences/services/sequence_service"));
 const sequencesAPI = ({ user }) => ({
-    getSequence: ({ id }) => __awaiter(void 0, void 0, void 0, function* () {
-        return yield sequence_service_1.default.getSequenceById({ sequenceId: id });
+    getSequence: (sequenceId) => __awaiter(void 0, void 0, void 0, function* () {
+        return yield sequence_service_1.default.getSequenceById({ sequenceId });
     }),
     getSequences: () => __awaiter(void 0, void 0, void 0, function* () {
         return yield sequence_service_1.default.getAllForUser({ userId: user.id });
+    }),
+    createSequence: (input) => __awaiter(void 0, void 0, void 0, function* () {
+        return yield sequence_service_1.default.createSequence(Object.assign(Object.assign({}, input), { userId: user.id }));
+    }),
+    updateSequence: (input) => __awaiter(void 0, void 0, void 0, function* () {
+        return yield sequence_service_1.default.updateSequence(input);
+    }),
+    cancelSequence: (sequenceId) => __awaiter(void 0, void 0, void 0, function* () {
+        return yield sequence_service_1.default.cancelSequence({ sequenceId });
+    }),
+    completeSequence: (sequenceId) => __awaiter(void 0, void 0, void 0, function* () {
+        return yield sequence_service_1.default.completeSequence({ sequenceId });
     }),
 });
 exports.sequencesAPI = sequencesAPI;

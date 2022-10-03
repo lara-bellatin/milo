@@ -1,8 +1,13 @@
-import { mergeResolvers } from "@graphql-tools/merge";
-
-import userResolvers from "./resolvers/users";
+import authResolvers from "./resolvers/auth";
+import usersResolvers from "./resolvers/users";
+import bucketsResolvers from "./resolvers/buckets";
+import sequencesResolvers from "./resolvers/sequences";
 import logsResolvers from "./resolvers/logs";
-import otherResolvers from "./resolvers/others";
 
-
-export default mergeResolvers([userResolvers, logsResolvers, otherResolvers]);
+export default [
+  authResolvers,
+  usersResolvers,
+  bucketsResolvers,
+  sequencesResolvers,
+  logsResolvers,
+];

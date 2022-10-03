@@ -5,15 +5,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const objection_1 = require("objection");
 const BaseModel_1 = __importDefault(require("../../utils/BaseModel"));
+const Log_1 = __importDefault(require("../../logs/models/Log"));
 const Bucket_1 = __importDefault(require("../../buckets/models/Bucket"));
 const Sequence_1 = __importDefault(require("../../sequences/models/Sequence"));
-const Log_1 = __importDefault(require("../../logs/models/Log"));
 class User extends BaseModel_1.default {
     static get tableName() {
         return "users";
     }
     static get relationMappings() {
         return {
+            logs: {
+                relation: objection_1.Model.HasManyRelation,
+                modelClass: Log_1.default,
+                join: {
+                    from: "users.id",
+                    to: "logs.userId",
+                },
+            },
             buckets: {
                 relation: objection_1.Model.HasManyRelation,
                 modelClass: Bucket_1.default,
@@ -28,14 +36,6 @@ class User extends BaseModel_1.default {
                 join: {
                     from: "users.id",
                     to: "sequences.userId",
-                },
-            },
-            logs: {
-                relation: objection_1.Model.HasManyRelation,
-                modelClass: Log_1.default,
-                join: {
-                    from: "users.id",
-                    to: "logs.userId",
                 },
             },
         };

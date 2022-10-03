@@ -1,6 +1,6 @@
 import { typographyVariants } from "theme";
 
-import { styled } from "stitches.config";
+import { styled } from "../../stitches.config";
 
 export const Text = styled("span", {
   margin: "0",

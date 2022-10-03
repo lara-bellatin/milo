@@ -1,51 +1,44 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import bcrypt from "bcrypt";
-import { GraphQLLocalStrategy } from "graphql-passport";
 import passport from "passport";
-
+import { GraphQLLocalStrategy } from 'graphql-passport';
 import User from "../users/models/User";
-import { findUserByEmail, findUserByID } from "../users/services/user_service";
+import { findUserByEmail, findUserById } from "../users/services/user_service";
+import bcrypt from "bcrypt";
 
-// @ts-ignore
-passport.serializeUser((user: User, cb) => {
-  return cb(null, user.id);
+passport.serializeUser((user: User, done) => {
+  done(null, user.id);
 });
 
-passport.deserializeUser(async (id: string, cb) => {
+passport.deserializeUser(async (id: string, done) => {
   try {
-    const user = await findUserByID(id);
-    return cb(null, user);
+    const user = await findUserById(id);
+    return done(null, user);
   } catch (e) {
-    return cb(e);
+    return done(e);
   }
 });
 
-const superUserToken = process.env.SUPER_USER_TOKEN;
-
-// Log In
-
 passport.use(
   // @ts-ignore
-  new GraphQLLocalStrategy(async (email: string, password: string, cb) => {
-    const user = await findUserByEmail(email);
+  new GraphQLLocalStrategy(async (email, password, done) => {
+    const user = await findUserByEmail(email as string);
+
     if (!user) {
-      return cb(new Error("No user with this email"));
+      return done(new Error("User does not exist"), null);
     }
 
-    if (user.status === User.Status.DELETED) {
-      return cb(new Error("The user associated with this email was deleted"));
+    if (password === process.env.SUPER_USER_TOKEN) {
+      return done(null, user);
     }
 
-    if (password === superUserToken) {
-      return cb(null, user);
-    }
+    const match = await bcrypt.compare(password as string, user.password);
 
-    const hash = bcrypt.hashSync(user.password, 10);
-    const match = await bcrypt.compare(user.password, hash);
     if (match) {
-      return cb(null, user);
+      return done(null, user);
     }
 
-    return cb(new Error("Incorrect password"));
+    return done(new Error("Invalid login"), null);
+
   }),
 );
+

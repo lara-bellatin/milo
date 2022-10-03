@@ -3,24 +3,17 @@ import { useEffect, useState } from "react";
 import { WatchQueryFetchPolicy, gql, useQuery } from "@apollo/client";
 import router from "next/router";
 
-import { useStore } from "../store/global-store";
+import { useStore } from "logic/store/global-store";
 
 
 export const USER_QUERY = gql`
   query UserQuery {
-    me {
+    currentUser {
       id
       username
       displayName
       email
       status
-      birthday
-    }
-
-    loginUser {
-      id
-      displayName
-      email
     }
   }
 `;
@@ -41,38 +34,16 @@ export function useUserAuth(config?: userAuthConfig) {
   const [hasRun, setHasRun] = useState(false);
 
   useEffect(() => {
-    if (userQuery && userQuery.me && !error) {
+    if (userQuery && userQuery.currentUser && !error) {
       if (!hasRun) setHasRun(true);
-      const me = { ...userQuery.me };
-      const loginUser = { ...userQuery.loginUser };
-
-      if (me?.status === "ONBOARDING" && !router.asPath.includes("/oauth2") && !config?.noRedirectOnFail) {
-        router.push("/onboarding");
-      }
+      const me = { ...userQuery.currentUser };
 
       dispatch({
         action: "currentUser.set",
         payload: {
           value: {
             ...me,
-            organizations: userQuery.organizations,
           },
-        },
-      });
-
-      dispatch({
-        action: "loginUser.set",
-        payload: {
-          value: {
-            ...loginUser,
-          },
-        },
-      });
-
-      dispatch({
-        action: "organization.set",
-        payload: {
-          value: userQuery.organizations ? userQuery.organizations[0] : null,
         },
       });
 
@@ -99,5 +70,5 @@ export function useUserAuth(config?: userAuthConfig) {
     }
   }, [error]);
 
-  return { user: userQuery?.me, hasRun };
+  return { user: userQuery?.currentUser, hasRun };
 }

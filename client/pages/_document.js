@@ -2,13 +2,23 @@ import Document, { Head, Html, Main, NextScript } from "next/document";
 
 import { getCssText } from "../stitches.config";
 
+const establishHost = ({ host }) => {
+  if (host.includes("localhost")) return `http://${host}`;
+  else return `https://${host}`;
+};
+
+const establishOGImageHost = ({ host }) => {
+  if (host.includes("localhost")) return `http://localhost:5000`;
+  else return `https://images.milo.sh`;
+};
+
 class MyDocument extends Document {
   static async getInitialProps(ctx) {
     const initialProps = await Document.getInitialProps(ctx);
 
     return {
       ogImageLink: ``,
-      ogTitle: "Milo",
+      ogTitle: "milo",
       ...initialProps,
     };
   }
@@ -22,30 +32,6 @@ class MyDocument extends Document {
           <meta property="og:url" name="og:url" content="website" key="tester" />
           <meta property="og:image" name="og:image" content={this.props.ogImageLink} key="tester" />
           <meta name="twitter:image" content={this.props.ogImageLink} />
-
-          <link
-            rel="preload"
-            href="/fonts/CircularStd/CircularStd-Book.woff2"
-            as="font"
-            type="font/woff2"
-            crossOrigin="anonymous"
-          />
-
-          <link
-            rel="preload"
-            href="/fonts/CircularStd/CircularStd-Medium.woff2"
-            as="font"
-            type="font/woff2"
-            crossOrigin="anonymous"
-          />
-
-          <link
-            rel="preload"
-            href="/fonts/CircularStd/CircularStd-Bold.woff2"
-            as="font"
-            type="font/woff2"
-            crossOrigin="anonymous"
-          />
 
           <style id="stitches" dangerouslySetInnerHTML={{ __html: getCssText() }} />
         </Head>

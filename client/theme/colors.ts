@@ -11,10 +11,10 @@ const textColors = {
   textDefault: "#2B2A35",
   textSubdued: "#616A7E",
   textDisabled: "#BABEC3",
-  textSuccess: "#16744D",
+  textSuccess: "#57A773",
   textCritical: "#D72C0D",
   textWarning: "#916A00",
-  textLink: "#7352FF",
+  textLink: "#9BD1E5",
   textWhite: "#FFFFFF",
 };
 const surfaceColors = {
@@ -40,11 +40,11 @@ const borderColors = {
   borderSuccessSubdued: "#95C9B4",
   borderCritical: "#D72C0D",
   borderCriticalSubdued: "#E0B3B2",
-  borderHighlight: "#7352FF",
-  borderHighlightSubdued: "#9C95C9",
+  borderHighlight: "#9BD1E5",
+  borderHighlightSubdued: "#D1FAFF",
 };
 const canvasColors = {
-  canvasPurple: "#7352FF",
+  canvasPurple: "#9BD1E5",
   canvasBlack: "#191919",
   canvasCream: "#F7F2E4",
 };
@@ -55,18 +55,19 @@ const iconColors = {
   iconSuccess: "#16744D",
   iconCritical: "#D72C0D",
   iconWarning: "#916A00",
-  iconHighlight: "#7352FF",
+  iconHighlight: "#9BD1E5",
   iconWhite: "#FFFFFF",
+  iconMint: "#AFD5C3"
 };
 const buttonColors = {
   // Primary
-  buttonPrimaryDefault: "#2B2A35",
-  buttonPrimaryHover: "#424254",
-  buttonPrimaryPressed: "#0B0B0E",
+  buttonPrimaryDefault: "#7F9D9F",
+  buttonPrimaryHover: "#8BA5A7",
+  buttonPrimaryPressed: "#739396",
   // Secondary
-  buttonSecondaryDefault: "#FFFFFF",
-  buttonSecondaryHover: "#F6F6F7",
-  buttonSecondaryPressed: "#F1F2F3",
+  buttonSecondaryDefault: "#F0F7F4",
+  buttonSecondaryHover: "#F0F7F4",
+  buttonSecondaryPressed: "#F0F7F4",
   // Destructive
   buttonDestructiveDefault: "#D72C0D",
   buttonDestructiveHover: "#B22000",
@@ -75,10 +76,12 @@ const buttonColors = {
   buttonDisabled: "#F2F2F3",
 };
 const decorativeColors = {
-  decorativeGreen: "#2ED792",
-  decorativeOrange: "#FF573D",
+  decorativeChampagne: "#FED18C",
+  decorativeOrange: "#FE654F",
   decorativeYellow: "#F6C626",
   decorativeMoss: "#A4B96D",
+  decorativeTuscan: "#885053",
+
 };
 
 export const colors = {

@@ -11,22 +11,16 @@ export default gql`
   ## INPUTS
 
   input CreateSequenceInput {
-    id: String!
     title: String!
-    description: String
-    dueDate: String
-    completedAt: String
+    ordered: Boolean!
+    bucketId: String
     logInput: [CreateLogInput]
   }
 
   input UpdateSequenceInput {
-    id: String!
+    sequenceId: String!
     title: String
-    description: String
-    type: BucketType
-    dueDate: String
-    logInput: [CreateLogInput]
-    deletedLogs: [String!]
+    ordered: Boolean!
   }
 
   ## TYPES
@@ -39,24 +33,25 @@ export default gql`
     updatedAt: String
     completedAt: String
     canceledAt: String
-    sequences: [Sequence]
+    userId: String!
+    buckets: [Bucket]
     logs: [Log]
+    owner: User
   }
 
 
   ## ENDPOINTS
 
   type Query {
-    sequence(id: String!): Sequence
+    sequence(sequenceId: String!): Sequence
     sequences: [Sequence!]!
-    sequenceLogs(id: String!): [Log!]!
   }
 
   type Mutation {
     createSequence(input: CreateSequenceInput!): Sequence!
     updateSequence(input: UpdateSequenceInput!): Sequence!
-    cancelSequence(id: String!): Sequence
-    completeSequence(id: String!): Sequence
+    cancelSequence(sequenceId: String!): Sequence
+    completeSequence(sequenceId: String!): Sequence
   }
 
 

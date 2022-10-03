@@ -38,12 +38,14 @@ export const dateFieldInput = (e) => {
   e.target.value = output.join("").substr(0, 14);
 };
 
-
-export const stateFieldInput = (e) => {
+export const dateFieldBlur = (e) => {
+  const splitKey = "-";
   const { value } = e.target;
-  const transformedValue = value.toUpperCase().substring(0, 2);
+  const splitValues = value.split(splitKey);
 
-  e.target.value = transformedValue;
+  if (splitValues.length !== 3 || splitValues.indexOf("") !== -1 || splitValues[2].length !== 4) {
+    e.target.value = "";
+  }
 };
 
 function checkValue(str, max) {
@@ -75,6 +77,27 @@ export function stringToUniqueColor(str: string) {
   }
 
   return colour;
+}
+
+export function randomGradientColor() {
+  const gradients = ["blue", "green", "purple", "yellow"];
+
+  const randomNum = Math.floor(Math.random() * gradients.length);
+  return `/images/avatars/background-gradients/${gradients[randomNum]}.png`;
+}
+
+export function getAndSetAvatarByKey({ key, newAvatarUrl }: { key: string; newAvatarUrl: string }) {
+  const storageName = "stir-default-avatar-";
+  const cached = localStorage.getItem(`${storageName}${key}`);
+
+  // Local cache exists, return it
+  if (cached) return cached;
+
+  // Local cache does not exist, set it
+  localStorage.setItem(`${storageName}${key}`, newAvatarUrl);
+
+  // Return new avatar url
+  return newAvatarUrl;
 }
 
 export function isValidEmail(toEmail: string) {

@@ -1,6 +1,6 @@
 import { CSS, createStitches } from "@stitches/react";
 
-import { colors, fontSizes, fontWeights, fonts, lineHeights, media, radii, shadows, space } from "./theme";
+import { colors, fontSizes, fontWeights, fonts, lineHeights, radii, space } from "theme";
 
 export const { styled, getCssText, theme, config } = createStitches({
   theme: {
@@ -10,14 +10,12 @@ export const { styled, getCssText, theme, config } = createStitches({
     fontWeights,
     lineHeights,
     radii,
-    shadows,
     space,
   },
-  media,
 });
 
 export type Variant = {
   [Name in string]: {
-    [Pair in number | string]: CSS<{ media: typeof media; theme: typeof theme }>;
+    [Pair in number | string]: CSS<{ theme: typeof theme }>;
   };
 };

@@ -17,7 +17,7 @@ export default gql`
   }
 
   input UpdateUserInput {
-    id: String!
+    userId: String!
     displayName: String
     username: String
     birthday: String
@@ -47,14 +47,15 @@ export default gql`
   ## ENDPOINTS
 
   type Query {
-    me(id: String!): User
-    loginUser: User
+    currentUser: User
   }
 
   type Mutation {
-    createUser(input: CreateUserInput!): User!
-    updateUser(input: UpdateUserInput!): User!
-    deleteUser(id: String!): User!
+    createUser(input: CreateUserInput!): AuthPayload
+    login(email: String!, password: String!): AuthPayload
+    logout: Boolean
+    updateUser(input: UpdateUserInput!): User
+    deleteUser(userId: String!): User!
   }
 
 

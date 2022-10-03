@@ -15,12 +15,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.bucketsAPI = void 0;
 const bucket_service_1 = __importDefault(require("../buckets/services/bucket_service"));
 const bucketsAPI = ({ user }) => ({
-    getBucket: ({ id }) => __awaiter(void 0, void 0, void 0, function* () {
-        return yield bucket_service_1.default.getBucketById({ bucketId: id });
+    getBucket: (bucketId) => __awaiter(void 0, void 0, void 0, function* () {
+        return yield bucket_service_1.default.getBucketById({ bucketId });
     }),
     getBuckets: () => __awaiter(void 0, void 0, void 0, function* () {
         return yield bucket_service_1.default.getAllForUser({ userId: user.id });
     }),
+    createBucket: (input) => __awaiter(void 0, void 0, void 0, function* () {
+        return yield bucket_service_1.default.createBucket(Object.assign(Object.assign({}, input), { userId: user.id }));
+    }),
+    updateBucket: (input) => __awaiter(void 0, void 0, void 0, function* () {
+        return yield bucket_service_1.default.updateBucket(input);
+    }),
+    completeBucket: (bucketId) => __awaiter(void 0, void 0, void 0, function* () {
+        return yield bucket_service_1.default.completeBucket({ bucketId });
+    }),
+    cancelBucket: (bucketId) => __awaiter(void 0, void 0, void 0, function* () {
+        return yield bucket_service_1.default.cancelBucket({ bucketId });
+    })
 });
 exports.bucketsAPI = bucketsAPI;
 //# sourceMappingURL=buckets_api.js.map

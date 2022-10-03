@@ -10,7 +10,6 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  JSON: any;
 };
 
 export type AuthPayload = {
@@ -27,11 +26,13 @@ export type Bucket = {
   dueDate?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   logs?: Maybe<Array<Maybe<Log>>>;
+  owner?: Maybe<User>;
   sequences?: Maybe<Array<Maybe<Sequence>>>;
   status: BucketStatus;
   title: Scalars['String'];
   type: BucketType;
   updatedAt?: Maybe<Scalars['String']>;
+  userId: Scalars['String'];
 };
 
 export enum BucketStatus {
@@ -50,10 +51,8 @@ export enum BucketType {
 }
 
 export type CreateBucketInput = {
-  completedAt?: InputMaybe<Scalars['String']>;
   description?: InputMaybe<Scalars['String']>;
   dueDate?: InputMaybe<Scalars['String']>;
-  id: Scalars['String'];
   title: Scalars['String'];
   type: BucketType;
 };
@@ -69,11 +68,9 @@ export type CreateLogInput = {
 };
 
 export type CreateSequenceInput = {
-  completedAt?: InputMaybe<Scalars['String']>;
-  description?: InputMaybe<Scalars['String']>;
-  dueDate?: InputMaybe<Scalars['String']>;
-  id: Scalars['String'];
+  bucketId?: InputMaybe<Scalars['String']>;
   logInput?: InputMaybe<Array<InputMaybe<CreateLogInput>>>;
+  ordered: Scalars['Boolean'];
   title: Scalars['String'];
 };
 
@@ -92,6 +89,7 @@ export type Log = {
   description?: Maybe<Scalars['String']>;
   dueDate?: Maybe<Scalars['String']>;
   id: Scalars['String'];
+  owner?: Maybe<User>;
   postNotes?: Maybe<Scalars['String']>;
   preNotes?: Maybe<Scalars['String']>;
   resolvedAt?: Maybe<Scalars['String']>;
@@ -102,6 +100,7 @@ export type Log = {
   title: Scalars['String'];
   type: LogType;
   updatedAt?: Maybe<Scalars['String']>;
+  userId: Scalars['String'];
 };
 
 export enum LogStatus {
@@ -113,6 +112,7 @@ export enum LogStatus {
 export enum LogType {
   Decision = 'DECISION',
   Event = 'EVENT',
+  Pin = 'PIN',
   Plan = 'PLAN',
   Task = 'TASK',
   Wait = 'WAIT'
@@ -120,6 +120,8 @@ export enum LogType {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addLogToBucket?: Maybe<Log>;
+  addLogToSequence?: Maybe<Log>;
   cancelBucket?: Maybe<Bucket>;
   cancelSequence?: Maybe<Sequence>;
   completeBucket?: Maybe<Bucket>;
@@ -127,7 +129,7 @@ export type Mutation = {
   createBucket: Bucket;
   createLog: Log;
   createSequence: Sequence;
-  createUser: User;
+  createUser?: Maybe<AuthPayload>;
   deleteLog?: Maybe<Log>;
   deleteUser: User;
   login?: Maybe<AuthPayload>;
@@ -137,27 +139,40 @@ export type Mutation = {
   updateBucket: Bucket;
   updateLog: Log;
   updateSequence: Sequence;
-  updateUser: User;
+  updateUser?: Maybe<User>;
+};
+
+
+export type MutationAddLogToBucketArgs = {
+  bucketId: Scalars['String'];
+  logId: Scalars['String'];
+};
+
+
+export type MutationAddLogToSequenceArgs = {
+  logId: Scalars['String'];
+  sequenceId: Scalars['String'];
+  sequenceOrder?: InputMaybe<Scalars['String']>;
 };
 
 
 export type MutationCancelBucketArgs = {
-  id: Scalars['String'];
+  bucketId: Scalars['String'];
 };
 
 
 export type MutationCancelSequenceArgs = {
-  id: Scalars['String'];
+  sequenceId: Scalars['String'];
 };
 
 
 export type MutationCompleteBucketArgs = {
-  id: Scalars['String'];
+  bucketId: Scalars['String'];
 };
 
 
 export type MutationCompleteSequenceArgs = {
-  id: Scalars['String'];
+  sequenceId: Scalars['String'];
 };
 
 
@@ -182,12 +197,12 @@ export type MutationCreateUserArgs = {
 
 
 export type MutationDeleteLogArgs = {
-  id: Scalars['String'];
+  logId: Scalars['String'];
 };
 
 
 export type MutationDeleteUserArgs = {
-  id: Scalars['String'];
+  userId: Scalars['String'];
 };
 
 
@@ -198,12 +213,12 @@ export type MutationLoginArgs = {
 
 
 export type MutationResolveLogArgs = {
-  id: Scalars['String'];
+  logId: Scalars['String'];
 };
 
 
 export type MutationUnresolveLogArgs = {
-  id: Scalars['String'];
+  logId: Scalars['String'];
 };
 
 
@@ -230,51 +245,41 @@ export type Query = {
   __typename?: 'Query';
   bucket?: Maybe<Bucket>;
   buckets: Array<Bucket>;
+  currentUser?: Maybe<User>;
   log?: Maybe<Log>;
-  loginUser?: Maybe<User>;
   logs: Array<Log>;
-  me?: Maybe<User>;
   sequence?: Maybe<Sequence>;
-  sequenceLogs: Array<Log>;
   sequences: Array<Sequence>;
 };
 
 
 export type QueryBucketArgs = {
-  id: Scalars['String'];
+  bucketId: Scalars['String'];
 };
 
 
 export type QueryLogArgs = {
-  id: Scalars['String'];
-};
-
-
-export type QueryMeArgs = {
-  id: Scalars['String'];
+  logId: Scalars['String'];
 };
 
 
 export type QuerySequenceArgs = {
-  id: Scalars['String'];
-};
-
-
-export type QuerySequenceLogsArgs = {
-  id: Scalars['String'];
+  sequenceId: Scalars['String'];
 };
 
 export type Sequence = {
   __typename?: 'Sequence';
+  buckets?: Maybe<Array<Maybe<Bucket>>>;
   canceledAt?: Maybe<Scalars['String']>;
   completedAt?: Maybe<Scalars['String']>;
   createdAt?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   logs?: Maybe<Array<Maybe<Log>>>;
-  sequences?: Maybe<Array<Maybe<Sequence>>>;
+  owner?: Maybe<User>;
   status: SequenceStatus;
   title: Scalars['String'];
   updatedAt?: Maybe<Scalars['String']>;
+  userId: Scalars['String'];
 };
 
 export enum SequenceStatus {
@@ -284,40 +289,33 @@ export enum SequenceStatus {
 }
 
 export type UpdateBucketInput = {
+  bucketId: Scalars['String'];
   description?: InputMaybe<Scalars['String']>;
   dueDate?: InputMaybe<Scalars['String']>;
-  id: Scalars['String'];
   title?: InputMaybe<Scalars['String']>;
   type?: InputMaybe<BucketType>;
 };
 
 export type UpdateLogInput = {
-  bucketId?: InputMaybe<Scalars['String']>;
   description?: InputMaybe<Scalars['String']>;
   dueDate?: InputMaybe<Scalars['String']>;
-  id: Scalars['String'];
+  logId: Scalars['String'];
   postNotes?: InputMaybe<Scalars['String']>;
   preNotes?: InputMaybe<Scalars['String']>;
-  sequenceId?: InputMaybe<Scalars['String']>;
-  sequenceOrder?: InputMaybe<Scalars['String']>;
   title?: InputMaybe<Scalars['String']>;
   type?: InputMaybe<LogType>;
 };
 
 export type UpdateSequenceInput = {
-  deletedLogs?: InputMaybe<Array<Scalars['String']>>;
-  description?: InputMaybe<Scalars['String']>;
-  dueDate?: InputMaybe<Scalars['String']>;
-  id: Scalars['String'];
-  logInput?: InputMaybe<Array<InputMaybe<CreateLogInput>>>;
+  ordered: Scalars['Boolean'];
+  sequenceId: Scalars['String'];
   title?: InputMaybe<Scalars['String']>;
-  type?: InputMaybe<BucketType>;
 };
 
 export type UpdateUserInput = {
   birthday?: InputMaybe<Scalars['String']>;
   displayName?: InputMaybe<Scalars['String']>;
-  id: Scalars['String'];
+  userId: Scalars['String'];
   username?: InputMaybe<Scalars['String']>;
 };
 

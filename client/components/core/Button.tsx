@@ -1,4 +1,4 @@
-import { colors } from "theme";
+import { colors, typographyVariants } from "theme";
 
 import { styled } from "stitches.config";
 
@@ -11,9 +11,7 @@ export const Button = styled("button", {
   appearance: "none",
   borderRadius: "$rounded",
   minWidth: "110px",
-  fontFamily: "$graphik",
-  fontSize: "$small",
-  fontWeight: "$medium",
+  ...typographyVariants.button,
   cursor: "pointer",
   gap: "$3",
   "&:disabled": {
@@ -87,6 +85,13 @@ export const Button = styled("button", {
         background: "none",
         color: "$canvasPurple",
         fontWeight: "$medium",
+        "&:disabled": {
+          color: "$textDisabled",
+          background: "none",
+          "&:hover": {
+            background: "none",
+          },
+        },
       },
       ghost: {
         borderRadius: "$regularRoundedSquare",

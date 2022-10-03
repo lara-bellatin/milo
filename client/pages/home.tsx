@@ -1,12 +1,9 @@
-import { HomePage } from "components/home/HomePage";
-import { getLayout } from "components/layout";
+import { PageHome } from "components/pages/PageHome";
 
 export default function Home() {
   return (
     <>
-      <HomePage />
+      <PageHome />
     </>
   );
 }
-
-Home.getLayout = getLayout;

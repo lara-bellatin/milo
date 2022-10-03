@@ -12,40 +12,34 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const bcrypt_1 = __importDefault(require("bcrypt"));
-const graphql_passport_1 = require("graphql-passport");
 const passport_1 = __importDefault(require("passport"));
-const User_1 = __importDefault(require("../users/models/User"));
+const graphql_passport_1 = require("graphql-passport");
 const user_service_1 = require("../users/services/user_service");
-passport_1.default.serializeUser((user, cb) => {
-    return cb(null, user.id);
+const bcrypt_1 = __importDefault(require("bcrypt"));
+passport_1.default.serializeUser((user, done) => {
+    done(null, user.id);
 });
-passport_1.default.deserializeUser((id, cb) => __awaiter(void 0, void 0, void 0, function* () {
+passport_1.default.deserializeUser((id, done) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const user = yield (0, user_service_1.findUserByID)(id);
-        return cb(null, user);
+        const user = yield (0, user_service_1.findUserById)(id);
+        return done(null, user);
     }
     catch (e) {
-        return cb(e);
+        return done(e);
     }
 }));
-const superUserToken = process.env.SUPER_USER_TOKEN;
-passport_1.default.use(new graphql_passport_1.GraphQLLocalStrategy((email, password, cb) => __awaiter(void 0, void 0, void 0, function* () {
+passport_1.default.use(new graphql_passport_1.GraphQLLocalStrategy((email, password, done) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield (0, user_service_1.findUserByEmail)(email);
     if (!user) {
-        return cb(new Error("No user with this email"));
+        return done(new Error("User does not exist"), null);
     }
-    if (user.status === User_1.default.Status.DELETED) {
-        return cb(new Error("The user associated with this email was deleted"));
+    if (password === process.env.SUPER_USER_TOKEN) {
+        return done(null, user);
     }
-    if (password === superUserToken) {
-        return cb(null, user);
-    }
-    const hash = bcrypt_1.default.hashSync(user.password, 10);
-    const match = yield bcrypt_1.default.compare(user.password, hash);
+    const match = yield bcrypt_1.default.compare(password, user.password);
     if (match) {
-        return cb(null, user);
+        return done(null, user);
     }
-    return cb(new Error("Incorrect password"));
+    return done(new Error("Invalid login"), null);
 })));
 //# sourceMappingURL=passport_strategies.js.map

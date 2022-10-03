@@ -12,6 +12,7 @@ export const fonts = {
   mintGrotesk: "Mint Grotesk, sans-serif",
 };
 export const fontSizes = {
+  tinier: "10px",
   tiny: "12px",
   small: "14px",
   small2: "16px",

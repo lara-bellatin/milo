@@ -17,9 +17,9 @@ class Log extends BaseModel {
     resolvedAt: string;
     deletedAt: string;
     sequenceId: string;
-    sequenceOrder: string;
+    sequenceOrder: number;
     bucketId: string;
-    userId: string;
+    userId!: string;
 
     // relations
     sequence: Sequence;
@@ -48,7 +48,7 @@ class Log extends BaseModel {
                     to: "buckets.id",
                 },
             },
-            creator: {
+            owner: {
                 relation: Model.HasOneRelation,
                 modelClass: User,
                 join: {
@@ -68,6 +68,7 @@ namespace Log {
         TASK = "TASK",
         WAIT = "WAIT",
         EVENT = "EVENT",
+        PIN = "PIN",
     }
 
     export enum Status {

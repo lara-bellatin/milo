@@ -1,112 +1,99 @@
-import Objection, { Model } from "objection";
-import { ApolloError } from "apollo-server-express";
+import Objection from "objection";
 import { nanoid } from "nanoid";
 import bcrypt from "bcrypt";
 
 import User from "../models/User";
-import { CreateUserInput, UpdateUserInput } from "../../generated/graphql";
 
+
+export async function findUserById(id: string, trx?: Objection.Transaction) {
+  return await User.query(trx)
+    .findById(id)
+    .withGraphFetched('[logs, buckets, sequences]');
+}
 
 export async function findUserByEmail(email: string, trx?: Objection.Transaction) {
   const user = await User.query(trx)
     .findOne({
       email: email.trim().toLowerCase(),
     })
-    .withGraphFetched("[buckets, sequences, logs]");
+    .withGraphFetched("logs");
   return user;
 }
 
-export async function findUserByID(id: string, trx?: Objection.Transaction) {
-  return await User.query(trx)
-    .findById(id)
-    .withGraphFetched("[buckets, sequences, logs]");
-}
+async function createUser({
+  displayName,
+  email,
+  password,
+}: {
+  displayName: string;
+  email: string;
+  password: string;
+}) {
+  const userWithEmailExists = await findUserByEmail(email);
 
-export async function patchUserById({ userId, data }: { userId: string; data: Partial<User> }) {
-  return User.query().patchAndFetchById(userId, data);
-}
-
-
-// MUTATIONS
-
-async function createUser({ input, trx }: { input: CreateUserInput, trx?: Objection.Transaction }) {
-  const { displayName, email, password } = input;
-
-  if (!email) {
-    throw new ApolloError("An email is required to create a new user")
-  }
-  const existingUser = await findUserByEmail(email, trx);
-
-  if (existingUser) {
-    throw new ApolloError("A user with this email already exists");
+  if (userWithEmailExists) {
+    throw new Error("User with email already exists");
   }
 
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(password, salt);
+  const hashedPassword = await bcrypt.hash(password, 10);
 
-  const userId = "user_" + nanoid();
-  const user = await Model.transaction(async (trx) => {
-    const user = await User.query(trx).insert({
-      id: userId,
-      displayName,
-      email,
-      status: User.Status.ACTIVE,
-      password: hashedPassword,
-    });
-
-    return user;
+  const user = await User.query().insert({
+    id: "user_" + nanoid(),
+    displayName,
+    email,
+    password: hashedPassword,
+    status: User.Status.ACTIVE,
   });
 
   return user;
+}
 
-};
+async function deleteUser(id: string, trx?: Objection.Transaction) {
+  return await User.query(trx).patchAndFetchById(id, {
+    status: User.Status.DELETED,
+  })
+}
 
+async function updateUser({
+  userId,
+  username,
+  displayName,
+  birthday,
+}: {
+  userId: string;
+  username?: string;
+  displayName?: string;
+  birthday?: string;
+}) {
+  const user = await findUserById(userId);
+  if (!user) {
+    throw new Error("User could not be found");
+  }
 
-async function updateUser({ input, trx }: { input: UpdateUserInput, trx?: Objection.Transaction }) {
-  const { id, displayName, username, birthday } = input;
-
-  const user = await findUserByID(id, trx);
-
-  if (!user) throw new ApolloError("User doesn't exist");
-
-  let updateDisplayName = user.displayName;
-  let updateUsername = user.username;
-  let updateBirthday = user.birthday;
-
-  if (displayName) {
-    updateDisplayName = displayName;
+  let updatedFields = {
+    username: user.username,
+    displayName: user.displayName,
+    birthday: user.birthday,
   }
 
   if (username) {
-    updateUsername = username;
+    updatedFields.username = username;
+  }
+
+  if (displayName) {
+    updatedFields.displayName = displayName;
   }
 
   if (birthday) {
-    updateBirthday = birthday;
+    updatedFields.birthday = birthday;
   }
 
-  return await patchUserById({
-    userId: user.id,
-    data: {
-      displayName: updateDisplayName,
-      username: updateUsername,
-      birthday: updateBirthday,
-    }
-  });
-}
-
-async function deleteUser({ id }: { id: string }) {
-  return await patchUserById({
-    userId: id,
-    data: {
-      status: User.Status.DELETED,
-    }
-  })
+  return await User.query().patchAndFetchById(userId, updatedFields);
 }
 
 
 export default {
   createUser,
-  updateUser,
   deleteUser,
+  updateUser,
 }

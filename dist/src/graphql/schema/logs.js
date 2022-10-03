@@ -10,6 +10,7 @@ exports.default = (0, apollo_server_express_1.gql) `
     TASK
     WAIT
     EVENT
+    PIN
   }
   
   enum LogStatus {
@@ -31,16 +32,13 @@ exports.default = (0, apollo_server_express_1.gql) `
   }
 
   input UpdateLogInput {
-    id: String!
+    logId: String!
     title: String
     description: String
     preNotes: String
     postNotes: String
     type: LogType
     dueDate: String
-    sequenceId: String
-    sequenceOrder: String
-    bucketId: String
   }
 
   ## TYPES
@@ -58,27 +56,31 @@ exports.default = (0, apollo_server_express_1.gql) `
     updatedAt: String
     resolvedAt: String
     deletedAt: String
+    userId: String!
     sequenceId: String
     sequenceOrder: String
     bucketId: String
     sequence: Sequence
     bucket: Bucket
+    owner: User
   }
 
 
   ## ENDPOINTS
 
   type Query {
-    log(id: String!): Log
+    log(logId: String!): Log
     logs: [Log!]!
   }
 
   type Mutation {
     createLog(input: CreateLogInput!): Log!
     updateLog(input: UpdateLogInput!): Log!
-    deleteLog(id: String!): Log
-    resolveLog(id: String!): Log
-    unresolveLog(id: String!): Log
+    deleteLog(logId: String!): Log
+    resolveLog(logId: String!): Log
+    unresolveLog(logId: String!): Log
+    addLogToBucket(logId: String!, bucketId: String!): Log
+    addLogToSequence(logId: String!, sequenceId: String!, sequenceOrder: String): Log
   }
 
 

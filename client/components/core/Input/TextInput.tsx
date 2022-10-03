@@ -6,7 +6,6 @@ import { styled } from "stitches.config";
 
 import { Flex } from "components/core/Flex";
 import { Text } from "components/core/Text";
-import React from "react";
 
 export type TextInputProps = React.ComponentProps<typeof TextInput>;
 
@@ -44,13 +43,13 @@ export const MaskedInput = styled(InputMask, {
   ...sharedInputStyles,
 });
 
-export const Label: React.FC = ({ children }: { children: React.ReactNode }) => (
+export const Label: React.FC = ({ children }) => (
   <Text type="body" css={{ fontWeight: "$medium", display: "flex", alignItems: "center" }}>
     {children}
   </Text>
 );
 
-export const InputGroup: React.FC = ({ children }: { children: React.ReactNode })=> (
+export const InputGroup: React.FC = ({ children }) => (
   <Flex direction="column" css={{ marginBottom: "$6", gap: "5px" }}>
     {children}
   </Flex>
