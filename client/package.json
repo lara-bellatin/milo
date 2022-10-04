@@ -11,6 +11,9 @@
   },
   "dependencies": {
     "@apollo/client": "^3.6.9",
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
+    "@mui/material": "^5.10.8",
     "formik": "^2.2.9",
     "graphql": "^16.6.0",
     "moment": "^2.29.4",

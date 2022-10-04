@@ -14,7 +14,6 @@ export default gql`
     WAITING
     PASSIVE
     COMPLETED
-    ARCHIVED
     CANCELED
   }
 

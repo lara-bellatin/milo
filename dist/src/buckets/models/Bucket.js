@@ -54,7 +54,6 @@ class Bucket extends BaseModel_1.default {
         Status["WAITING"] = "WAITING";
         Status["PASSIVE"] = "PASSIVE";
         Status["COMPLETED"] = "COMPLETED";
-        Status["ARCHIVED"] = "ARCHIVED";
         Status["CANCELED"] = "CANCELED";
     })(Status = Bucket.Status || (Bucket.Status = {}));
 })(Bucket || (Bucket = {}));

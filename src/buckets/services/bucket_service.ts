@@ -88,7 +88,7 @@ async function cancelBucket({ bucketId }: { bucketId: string }) {
     throw new Error("Bucket could not be found");
   }
 
-  if([Bucket.Status.CANCELED, Bucket.Status.ARCHIVED, Bucket.Status.COMPLETED].includes(bucket.status)) {
+  if([Bucket.Status.CANCELED, Bucket.Status.COMPLETED].includes(bucket.status)) {
     throw new Error("Bucket cannot be canceled")
   }
 
@@ -103,7 +103,7 @@ async function completeBucket({ bucketId }: { bucketId: string }) {
     throw new Error("Bucket could not be found");
   }
 
-  if([Bucket.Status.CANCELED, Bucket.Status.ARCHIVED, Bucket.Status.COMPLETED].includes(bucket.status)) {
+  if([Bucket.Status.CANCELED, Bucket.Status.COMPLETED].includes(bucket.status)) {
     throw new Error("Bucket cannot be completed")
   }
 

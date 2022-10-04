@@ -3,4 +3,8 @@ export enum IconsEnum {
   "STAR" = "STAR",
   "CALENDAR" = "CALENDAR",
   "PIN" = "PIN",
+  "SQUARE" = "SQUARE",
+  "TRIANGLE" = "TRIANGLE",
+  "EXCLAMATION" = "EXCLAMATION",
+  "PROJECT_BOARD" = "PROJECT_BOARD",
 }

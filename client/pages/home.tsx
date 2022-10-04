@@ -1,4 +1,5 @@
 import { PageHome } from "components/pages/PageHome";
+import { getLayout } from "components/layouts/site-layout";
 
 export default function Home() {
   return (
@@ -7,3 +8,5 @@ export default function Home() {
     </>
   );
 }
+
+Home.getLayout = getLayout;

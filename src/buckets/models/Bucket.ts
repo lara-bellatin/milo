@@ -68,7 +68,6 @@ namespace Bucket {
         WAITING = "WAITING", // waiting on external factor to continue
         PASSIVE = "PASSIVE", // no action needs to be taken
         COMPLETED = "COMPLETED",
-        ARCHIVED = "ARCHIVED",
         CANCELED = "CANCELED",
     }
 }

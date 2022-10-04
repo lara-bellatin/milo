@@ -1,39 +1,36 @@
 import { IconsEnum } from "components/icons";
+import { colors } from "theme";
 
-export enum TabType {
+export enum ViewType {
   TODAY = "TODAY",
   THIS_WEEK = "THIS_WEEK",
   UNRESOLVED = "UNRESOLVED",
   PROJECT_BOARD = "PROJECT_BOARD",
-  PROJECT = "PROJECT",
-  BUCKET = "BUCKET",
 }
 
-export interface Tab {
-  path: string;
-  icon: IconsEnum;
-  label: string;
-}
-
-export const TABS = {
-  [TabType.TODAY]: {
+export const VIEWS = {
+  [ViewType.TODAY]: {
     path: "/home",
     icon: IconsEnum.STAR,
+    fill: colors.decorativeYellow,
     label: "Today",
   },
-  [TabType.THIS_WEEK]: {
+  [ViewType.THIS_WEEK]: {
     path: "/this-week",
     icon: IconsEnum.CALENDAR,
+    fill: colors.decorativeTuscan,
     label: "This Week",
   },
-  [TabType.UNRESOLVED]: {
+  [ViewType.UNRESOLVED]: {
     path: "/unresolved",
     icon: IconsEnum.STAR,
+    fill: colors.decorativeOrange,
     label: "Unresolved Logs",
   },
-  [TabType.PROJECT_BOARD]: {
+  [ViewType.PROJECT_BOARD]: {
     path: "/project-board",
     icon: IconsEnum.STAR,
+    fill: colors.iconMint,
     label: "Project Board",
   },
 };

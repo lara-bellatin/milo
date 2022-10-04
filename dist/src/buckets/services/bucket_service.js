@@ -60,7 +60,7 @@ function cancelBucket({ bucketId }) {
         if (!bucket) {
             throw new Error("Bucket could not be found");
         }
-        if ([Bucket_1.default.Status.CANCELED, Bucket_1.default.Status.ARCHIVED, Bucket_1.default.Status.COMPLETED].includes(bucket.status)) {
+        if ([Bucket_1.default.Status.CANCELED, Bucket_1.default.Status.COMPLETED].includes(bucket.status)) {
             throw new Error("Bucket cannot be canceled");
         }
         return yield Bucket_1.default.query().patchAndFetchById(bucketId, { status: Bucket_1.default.Status.CANCELED });
@@ -72,7 +72,7 @@ function completeBucket({ bucketId }) {
         if (!bucket) {
             throw new Error("Bucket could not be found");
         }
-        if ([Bucket_1.default.Status.CANCELED, Bucket_1.default.Status.ARCHIVED, Bucket_1.default.Status.COMPLETED].includes(bucket.status)) {
+        if ([Bucket_1.default.Status.CANCELED, Bucket_1.default.Status.COMPLETED].includes(bucket.status)) {
             throw new Error("Bucket cannot be completed");
         }
         return yield Bucket_1.default.query().patchAndFetchById(bucketId, { status: Bucket_1.default.Status.CANCELED });
