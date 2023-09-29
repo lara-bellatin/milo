@@ -250,6 +250,7 @@ export type Query = {
   logs: Array<Log>;
   sequence?: Maybe<Sequence>;
   sequences: Array<Sequence>;
+  todayLogs?: Maybe<Array<Log>>;
 };
 
 

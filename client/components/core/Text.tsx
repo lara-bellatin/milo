@@ -32,20 +32,17 @@ export const Text = styled("span", {
       white: {
         color: "$white",
       },
-      subdued: {
-        color: "$textSubdued",
+      light: {
+        color: "$textLight",
       },
-      purple: {
-        color: "$canvasPurple",
+      lighter: {
+        color: "$textLighter",
       },
-      critical: {
-        color: "$textCritical",
+      success: {
+        color: "$textSuccess",
       },
-      disabled: {
-        color: "$textDisabled",
-      },
-      warning: {
-        color: "$textWarning",
+      error: {
+        color: "$textError",
       },
     },
     weight: {

@@ -253,6 +253,7 @@ export type Query = {
   logs: Array<Log>;
   sequence?: Maybe<Sequence>;
   sequences: Array<Sequence>;
+  todayLogs?: Maybe<Array<Log>>;
 };
 
 
@@ -351,10 +352,22 @@ export type LoginMutationVariables = Exact<{
 
 export type LoginMutation = { __typename?: 'Mutation', login?: { __typename?: 'AuthPayload', user?: { __typename?: 'User', id: string, displayName: string, username?: string | null, email: string, status: UserStatus, birthday?: string | null, createdAt?: string | null, updatedAt?: string | null } | null } | null };
 
+export type BucketQueryVariables = Exact<{
+  bucketId: Scalars['String'];
+}>;
+
+
+export type BucketQuery = { __typename?: 'Query', bucket?: { __typename?: 'Bucket', id: string, title: string, description?: string | null, type: BucketType, status: BucketStatus, dueDate?: string | null, logs?: Array<{ __typename?: 'Log', id: string, title: string, type: LogType, status: LogStatus, description?: string | null, preNotes?: string | null, postNotes?: string | null, dueDate?: string | null } | null> | null } | null };
+
 export type BucketsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type BucketsQuery = { __typename?: 'Query', buckets: Array<{ __typename?: 'Bucket', id: string, title: string, description?: string | null, type: BucketType, status: BucketStatus, dueDate?: string | null }> };
+
+export type GetTodayLogsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetTodayLogsQuery = { __typename?: 'Query', todayLogs?: Array<{ __typename?: 'Log', id: string, title: string, description?: string | null, preNotes?: string | null, postNotes?: string | null, type: LogType, status: LogStatus, dueDate?: string | null, bucket?: { __typename?: 'Bucket', id: string, title: string, status: BucketStatus, type: BucketType } | null }> | null };
 
 
 export const LoginDocument = gql`
@@ -400,6 +413,56 @@ export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginM
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
 export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
+export const BucketDocument = gql`
+    query Bucket($bucketId: String!) {
+  bucket(bucketId: $bucketId) {
+    id
+    title
+    description
+    type
+    status
+    dueDate
+    logs {
+      id
+      title
+      type
+      status
+      description
+      preNotes
+      postNotes
+      dueDate
+    }
+  }
+}
+    `;
+
+/**
+ * __useBucketQuery__
+ *
+ * To run a query within a React component, call `useBucketQuery` and pass it any options that fit your needs.
+ * When your component renders, `useBucketQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useBucketQuery({
+ *   variables: {
+ *      bucketId: // value for 'bucketId'
+ *   },
+ * });
+ */
+export function useBucketQuery(baseOptions: Apollo.QueryHookOptions<BucketQuery, BucketQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<BucketQuery, BucketQueryVariables>(BucketDocument, options);
+      }
+export function useBucketLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<BucketQuery, BucketQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<BucketQuery, BucketQueryVariables>(BucketDocument, options);
+        }
+export type BucketQueryHookResult = ReturnType<typeof useBucketQuery>;
+export type BucketLazyQueryHookResult = ReturnType<typeof useBucketLazyQuery>;
+export type BucketQueryResult = Apollo.QueryResult<BucketQuery, BucketQueryVariables>;
 export const BucketsDocument = gql`
     query Buckets {
   buckets {
@@ -439,3 +502,50 @@ export function useBucketsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Bu
 export type BucketsQueryHookResult = ReturnType<typeof useBucketsQuery>;
 export type BucketsLazyQueryHookResult = ReturnType<typeof useBucketsLazyQuery>;
 export type BucketsQueryResult = Apollo.QueryResult<BucketsQuery, BucketsQueryVariables>;
+export const GetTodayLogsDocument = gql`
+    query GetTodayLogs {
+  todayLogs {
+    id
+    title
+    description
+    preNotes
+    postNotes
+    type
+    status
+    dueDate
+    bucket {
+      id
+      title
+      status
+      type
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetTodayLogsQuery__
+ *
+ * To run a query within a React component, call `useGetTodayLogsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTodayLogsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTodayLogsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetTodayLogsQuery(baseOptions?: Apollo.QueryHookOptions<GetTodayLogsQuery, GetTodayLogsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetTodayLogsQuery, GetTodayLogsQueryVariables>(GetTodayLogsDocument, options);
+      }
+export function useGetTodayLogsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTodayLogsQuery, GetTodayLogsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetTodayLogsQuery, GetTodayLogsQueryVariables>(GetTodayLogsDocument, options);
+        }
+export type GetTodayLogsQueryHookResult = ReturnType<typeof useGetTodayLogsQuery>;
+export type GetTodayLogsLazyQueryHookResult = ReturnType<typeof useGetTodayLogsLazyQuery>;
+export type GetTodayLogsQueryResult = Apollo.QueryResult<GetTodayLogsQuery, GetTodayLogsQueryVariables>;

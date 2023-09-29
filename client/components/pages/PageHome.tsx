@@ -5,7 +5,8 @@ import { useUserAuth } from "logic/apollo/use-user-auth";
 import { Canvas } from "components/core/Canvas";
 import { Flex } from "components/core/Flex";
 import { Text } from "components/core/Text";
-import { BucketBar } from "components/BucketBar";
+import { TodayView } from "components/views/Today";
+import { SideBar } from "components/SideBar";
 
 export const PageHome = () => {
   const { user } = useUserAuth();
@@ -17,7 +18,11 @@ export const PageHome = () => {
         <Text type="displayXLarge"> Let's get to work, {user?.displayName}</Text>
       </Flex> 
 
-      <BucketBar />
+      <Flex direction="row" justify="between" width="fill" css={{ gap:"$8"}}>
+        <SideBar />
+
+        <TodayView />
+      </Flex>
 
     </Canvas>
   );

@@ -70,6 +70,7 @@ export default gql`
   type Query {
     log(logId: String!): Log
     logs: [Log!]!
+    todayLogs: [Log!]
   }
 
   type Mutation {

@@ -20,6 +20,14 @@ async function getAllForUser({ userId }: { userId: string }) {
     .withGraphFetched('[owner, bucket, sequence]');
 }
 
+async function getTodayLogs({ userId }: { userId: string }) {
+  return await Log.query()
+    .where("userId", userId)
+    .whereRaw("due_date::DATE = CURRENT_DATE OR created_at::DATE = CURRENT_DATE")
+    .withGraphFetched('[owner, bucket, sequence]')
+    .orderBy("created_at");
+}
+
 
 /*
  * * * * * * *
@@ -207,6 +215,7 @@ export default {
   // Queries
   getLogById,
   getAllForUser,
+  getTodayLogs,
 
   // Mutations
   createLog,

@@ -9,6 +9,9 @@ export default {
     logs: ensureAuthenticated(async (_:any, { input }: Args, context: Context) => {
       return await context.apis?.logsAPI.getLogs(input);
     }),
+    todayLogs: ensureAuthenticated(async (_:any, { input }: Args, context: Context) => {
+      return await context.apis?.logsAPI.getTodayLogs(input);
+    }),
   },
   Mutation: {
     createLog: ensureAuthenticated(async (_:any, { input }: Args, context: Context) => {

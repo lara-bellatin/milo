@@ -8,29 +8,26 @@ const white = "#FFFFFF";
 
 /** NAMED COLOR GROUPS **/
 const textColors = {
-  textDefault: "#2B2A35",
-  textSubdued: "#616A7E",
-  textDisabled: "#BABEC3",
-  textSuccess: "#57A773",
-  textCritical: "#D72C0D",
-  textWarning: "#916A00",
-  textLink: "#9BD1E5",
-  textWhite: "#FFFFFF",
+  textDefault: "#2b2a36",
+  textLight: "#5f6a80",
+  textLighter: "#b9bec4",
+  textWhite: "#ffffff",
+  textSuccess: "#16744D",
+  textError: "#EA4B2E",
+  textLink: "#8bd3e8",
 };
 const surfaceColors = {
-  surfaceDefault: "#FFFFFF",
-  surfaceSubdued: "#FAFAFA",
-  surfaceDisabled: "#FAFBFB",
-  surfaceHover: "#FCFCFD",
-  surfaceSuccess: "#D4F7E9",
-  surfaceSuccessSubdued: "#EAFBF4",
-  surfaceCritical: "#FCD6CF",
-  surfaceCriticalSubdued: "#FEEAE7",
-  surfaceWarning: "#FFEEC2",
-  surfaceWarningSubdued: "#FFF3D6",
-  surfaceHighlightSubduded: "rgba(115, 82, 255, 0.15)",
-  surfaceOverlay: "rgba(43, 42, 53, 0.6)",
-  surfaceLoadingGradient: "linear-gradient(270deg, #BABEC3 -40.63%, rgba(186, 190, 195, 0.3) 157.81%)",
+  surfaceDefault: "#ffffff",
+  surfaceSubdued: "#f2f2f2",
+  surfaceDarker: "#b8b9bb",
+  surfaceCream: "#f3f1ea",
+  surfaceMint: "#deede7",
+  surfaceFireOrange: "#ffc9c3",
+  surfaceYellow: "#fae7b2",
+  surfaceGreen: "#cad6d7",
+  surfaceGrey: "#e5e7e8",
+  surfaceSuccess: "#cce8de",
+  surfaceError: "#f8beb6",
 };
 const borderColors = {
   borderDefault: "#EDEDED",
@@ -38,28 +35,25 @@ const borderColors = {
   borderHover: "#E0E0E0",
   borderSuccess: "#16744D",
   borderSuccessSubdued: "#95C9B4",
-  borderCritical: "#D72C0D",
-  borderCriticalSubdued: "#E0B3B2",
-  borderHighlight: "#9BD1E5",
-  borderHighlightSubdued: "#D1FAFF",
+  borderError: "#D72C0D",
+  borderErrorSubdued: "#E0B3B2",
 };
-const canvasColors = {
-  canvasPurple: "#9BD1E5",
-  canvasBlack: "#191919",
-  canvasCream: "#F7F2E4",
-};
+
 const iconColors = {
   iconDefault: "#2B2A35",
-  iconSubdued: "#616A7E",
-  iconDisabled: "#BABEC3",
-  iconSuccess: "#16744D",
-  iconCritical: "#D72C0D",
-  iconWarning: "#916A00",
-  iconHighlight: "#9BD1E5",
+  iconLight: "#5f6a80",
+  iconLighter: "#b9bec4",
   iconWhite: "#FFFFFF",
-  iconMint: "#AFD5C3"
+  iconSuccess: "#16744D",
+  iconError: "#EA4B2E",
+  iconCream: "#eee7d7",
+  iconMint: "#AFD5C3",
+  iconFireOrange: "#ff5643",
+  iconYellow: "#ffc400",
+  iconGreen: "#84a6a8",
+  iconGrey: "#d2d6da",
 };
-const buttonColors = {
+const buttonColors = { // Needs Changing
   // Primary
   buttonPrimaryDefault: "#7F9D9F",
   buttonPrimaryHover: "#8BA5A7",
@@ -75,14 +69,6 @@ const buttonColors = {
   // Shared
   buttonDisabled: "#F2F2F3",
 };
-const decorativeColors = {
-  decorativeChampagne: "#FED18C",
-  decorativeOrange: "#FE654F",
-  decorativeYellow: "#F6C626",
-  decorativeMoss: "#A4B96D",
-  decorativeTuscan: "#885053",
-
-};
 
 export const colors = {
   white,
@@ -90,8 +76,6 @@ export const colors = {
   ...textColors,
   ...surfaceColors,
   ...borderColors,
-  ...canvasColors,
   ...iconColors,
   ...buttonColors,
-  ...decorativeColors,
 };

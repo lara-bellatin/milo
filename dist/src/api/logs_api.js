@@ -21,6 +21,9 @@ const logsAPI = ({ user }) => ({
     getLogs: () => __awaiter(void 0, void 0, void 0, function* () {
         return yield log_services_1.default.getAllForUser({ userId: user.id });
     }),
+    getTodayLogs: () => __awaiter(void 0, void 0, void 0, function* () {
+        return yield log_services_1.default.getTodayLogs({ userId: user.id });
+    }),
     createLog: (input) => __awaiter(void 0, void 0, void 0, function* () {
         return yield log_services_1.default.createLog(Object.assign({ userId: user.id }, input));
     }),

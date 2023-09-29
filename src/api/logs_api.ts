@@ -8,6 +8,9 @@ const logsAPI = ({ user }: AuthContext) => ({
   getLogs: async () => {
     return await LogService.getAllForUser({ userId: user.id });
   },
+  getTodayLogs: async () => {
+    return await LogService.getTodayLogs({ userId: user.id });
+  },
   createLog: async (input: any) => {
     return await LogService.createLog({ userId: user.id, ...input });
   },
